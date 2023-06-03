@@ -7,6 +7,7 @@ use App\Models\Bonus;
 use App\Models\Group;
 use App\Models\Casino;
 use App\Models\Players;
+use App\Models\Workers;
 use App\Models\Gnomeinfo;
 use Illuminate\Http\Request;
 use App\Http\Requests\BonusRequest;
@@ -19,10 +20,19 @@ class BonusController extends Controller
      */
     public function index()
     {
-        $bonuss = Bonus::select('bonuses.*', 'casinos.id as casino_id', 'groups.id as group_id', 'casinos.name as casino_name', 'groups.name as group_name')
-                ->leftJoin('casinos', 'casinos.id', '=', 'bonuses.casino_name')
-                ->leftJoin('groups', 'groups.id', '=', 'bonuses.group' )
-                ->get();
+        if(auth()->user()->role == 'administrator'){
+            $bonuss = Bonus::select('bonuses.*', 'casinos.id as casino_id', 'groups.id as group_id', 'casinos.name as casino_name', 'groups.name as group_name')
+                    ->leftJoin('casinos', 'casinos.id', '=', 'bonuses.casino_name')
+                    ->leftJoin('groups', 'groups.id', '=', 'bonuses.group' )
+                    ->get();
+        }else{
+            $worker = Workers::select('id')->where('assigned_user', auth()->user()->id)->first();
+            $bonuss = Bonus::select('bonuses.*', 'casinos.id as casino_id', 'groups.id as group_id', 'casinos.name as casino_name', 'groups.name as group_name')
+                    ->leftJoin('casinos', 'casinos.id', '=', 'bonuses.casino_name')
+                    ->leftJoin('groups', 'groups.id', '=', 'bonuses.group' )
+                    ->where('worker', $worker->id)
+                    ->get();
+        }
 
         $bonuss = $bonuss->map(function($v){
             $v->cando = 'No';
@@ -58,7 +68,7 @@ class BonusController extends Controller
 
             // Last time anyone done casino
             $lasttimeAnyoneDoneCasinoDay = Players::selectRaw("datediff(now(), date) as day_diff")->where('casino', $v->casino_id)->where('type', 'sub')->orderByDesc('date')->limit(1)->first();
-            $v->last_anyone_done_casino = $lasttimeAnyoneDoneCasinoDay->day_diff;
+            $v->last_anyone_done_casino = $lasttimeAnyoneDoneCasinoDay &&   $lasttimeAnyoneDoneCasinoDay->day_diff ? $lasttimeAnyoneDoneCasinoDay->day_diff : 0;
             $v->anyone_done_casino_ok = 'yes';
             if($lasttimeAnyoneDoneCasinoDay && $lasttimeAnyoneDoneCasinoDay->day_diff < $v->anyone_done_casino){
                 $v->anyone_done_casino_ok = 'no';
@@ -67,7 +77,7 @@ class BonusController extends Controller
 
             // Last time anyone done group
             $lasttimeAnyoneDoneGroupDay = Players::selectRaw("datediff(now(), date) as day_diff")->where('group', $v->group)->where('type', 'sub')->orderByDesc('date')->limit(1)->first();
-            $v->last_anyone_done_group = $lasttimeAnyoneDoneGroupDay->day_diff;
+            $v->last_anyone_done_group = $lasttimeAnyoneDoneGroupDay && $lasttimeAnyoneDoneGroupDay->day_diff ? $lasttimeAnyoneDoneGroupDay->day_diff : 0;
             $v->anyone_done_group_ok = 'yes';
             if($lasttimeAnyoneDoneGroupDay && $lasttimeAnyoneDoneGroupDay->day_diff < $v->anyone_done_group){
                 $v->anyone_done_group_ok = 'no';
@@ -103,8 +113,10 @@ class BonusController extends Controller
             // dd($pendingPayoutsForGnomeInGroup);
             
             // Done 
-            $done = Players::selectRaw('count(*) as total')->where('name', $v->gnome)->where('casino_bonus_lookup', $v->casino_lookup)->get();
-            // dd($done);
+            $v->done = 'no';
+            $done = Players::selectRaw('count(*) as total')->where('name', $v->gnome)->where('casino_bonus_lookup', $v->id)->first();
+            if($done && isset($done->total) && $done->total > 0)
+                $v->done = 'yes';
 
 
             if($v->prtn != 0 
@@ -116,13 +128,17 @@ class BonusController extends Controller
                 && $v->anyone_done_group_ok == 'yes'
                 && $v->pp_gnome_group_ok == 'yes' 
                 && $v->tpp_gnome_everyone_in_group_ok == 'yes' 
-                && $v->spp_gnome_everyone_in_group_ok = 'yes'
+                && $v->spp_gnome_everyone_in_group_ok = 'yes' 
+                && $v->done == 'no'
             ){
                 $v->cando = 'Yes';
             }
 
             //Profit 
             $v->profit = $v->deposit && $v->bonus ? ($v->bonus * 100 )  / $v->deposit . '%' : '';
+
+            //Wagering total
+            $v->wagering_total = $v->wagering_name == 'xdb' ? ($v->deposit + $v->bonus) * $v->wagering_value : $v->bonus * $v->wagering_value;
 
             
             return $v;
@@ -186,6 +202,8 @@ class BonusController extends Controller
      */
     public function store(BonusRequest $request)
     {
+        $worker = Workers::select('id')->where('assigned_user', auth()->user()->id)->first();
+
         $bonus                              = new Bonus;
         $bonus->gnome                       = $request->gnome;
         $bonus->casino_lookup               = $request->casino_lookup;
@@ -205,6 +223,7 @@ class BonusController extends Controller
         $bonus->everyone_pending_payout     = $request->everyone_pending_payout;
         $bonus->everyone_sub_pending_payout = $request->everyone_sub_pending_payout;
         $bonus->notes                       = !empty($request->notes) ? $request->notes : '';
+        $bonus->worker                      = $worker->id;
 
         // dd($bonus);
 

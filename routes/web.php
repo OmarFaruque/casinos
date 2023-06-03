@@ -7,6 +7,8 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CasinoController;
 use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\WorkersController;
+use App\Http\Controllers\OverviewController;
+use App\Http\Controllers\ProfitrangeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,12 +34,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
 
     Route::group(['middleware' => ['guest']], function() {
         /**
-         * Register Routes
-         */
-        Route::get('/register', 'RegisterController@show')->name('register.show');
-        Route::post('/register', 'RegisterController@register')->name('register.perform');
-
-        /**
          * Login Routes
          */
         Route::get('/login', 'LoginController@show')->name('login.show');
@@ -46,6 +42,17 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
     });
 
     Route::group(['middleware' => ['auth']], function() {
+        /**
+         * Register Routes
+         */
+        Route::get('/register', 'RegisterController@show')->name('register.show');
+        Route::post('/register', 'RegisterController@register')->name('register.perform');
+        Route::get('/userlists', 'RegisterController@index')->name('register.userlists');
+        Route::get('/user/{id}/edit', 'RegisterController@edit')->name('register.edit');
+        Route::patch('/user/{id}/update', 'RegisterController@update')->name('register.update');
+        Route::delete('/user/{id}/destroy', 'RegisterController@destroy')->name('register.destroy');
+
+
         /**
          * Logout Routes
          */
@@ -60,6 +67,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
          * Casinos done resources
          */
         Route::get('casinos-done', 'PlayersController@index')->name('casinos-done');
+        Route::get('casinos-summary', 'PlayersController@summary')->name('casinos-summary');
         Route::get('new-casino-done', 'PlayersController@create')->name('new-casino-done');
         Route::post('players.store', 'PlayersController@store')->name('players.store');
         Route::patch('players/{id}/update', 'PlayersController@update')->name('players.update');
@@ -89,6 +97,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::resource('bonus', BonusController::class);
 
         Route::resource('bans', BansController::class);
+        Route::resource('profit', ProfitrangeController::class);
+        
+        Route::post('overview', 'OverviewController@index');
+        Route::resource('overview', OverviewController::class, ['except' => ['store']]);
     });
     
 });

@@ -34,6 +34,36 @@ class PlayersController extends Controller
     }
 
 
+    /**
+     * Casinode done short summary
+     */
+    public function summary(){
+        
+        $datas = Players::selectRaw('sum(case when partpaid IS NOT NULL then partpaid END) as total_partpaid, 
+        (SUM(case when status <> "all-paid" AND status <> "dispute" then balance END)  - sum(case when partpaid IS NOT NULL then partpaid END)) as total_owed, 
+        sum(bonus) as total_bonus, 
+        coalesce(sum(balance)) - coalesce(sum(deposit)) as total_profit, 
+        coalesce(sum(deposit)) as total_deposit, 
+        coalesce(sum(case when type="sub" then bonus END)) as total_signups, 
+        coalesce(sum(case when type="reload" then bonus END)) as total_reload
+        ')->first();
+
+        $sevens = Players::selectRaw(
+            'coalesce(sum(case when DATE(date) >= CURRENT_DATE - INTERVAL 6 DAY then bonus END)) as bonus_value, 
+            coalesce(count(case when type = "sub" OR type="reload" then bonus END)) as bonus_done,
+            coalesce(sum(bonus) * 0.45) as bonus_ev,
+            coalesce(sum(balance) - sum(deposit)) as bonus_profit,
+            date'
+        )->whereRaw('DATE(date) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)')
+        ->groupBy('date')->get();
+
+        // dd($sevens);    
+
+        return view('casinodone.summary')->with([
+            'casino_dones' => $datas, 
+            'sevens' => $sevens
+        ]);
+    }
 
     /**
      * List of all available payment methods

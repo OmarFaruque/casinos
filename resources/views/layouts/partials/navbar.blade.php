@@ -27,8 +27,8 @@
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex flex-shrink-0 items-center">
-            <img class="block h-8 w-auto lg:hidden" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
-            <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+            <img class="block h-8 w-auto lg:hidden" src="{{URL::asset('img/mark.svg')}}" alt="Your Company">
+            <img class="hidden h-8 w-auto lg:block" src="{{URL::asset('img/mark.svg')}}" alt="Your Company">
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
@@ -36,23 +36,32 @@
               {{-- <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Team</a> --}}
               {{-- <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Projects</a>
               <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Calendar</a> --}}
+              @auth
+              <span class="p-2 text-gray-100 capitalize">
+                {{__('Hello')}} {{!empty(auth()->user()->display_name) ? auth()->user()->display_name : auth()->user()->name}}!
+              </span>
+              @endauth
             </div>
           </div>
         </div>
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             @auth
-              {{auth()->user()->name}}
+             
               <div class="text-end">
-                <a href="{{ route('logout.perform') }}" class="bg-blue text-white rounded-md px-3 text-sm font-medium">Logout</a>
+                <a href="{{ route('logout.perform') }}" class="bg-blue text-white rounded-md px-5 text-sm font-medium bg-red-700 py-3">Logout</a>
               </div>
             @endauth
-      
+            <div class="text-end">
             @guest
-              <div class="text-end">
                 <a href="{{ route('login.perform') }}" class="bg-indigo-500 py-2 text-white rounded-md px-5 text-sm font-medium">Login</a>
-                <a href="{{ route('register.perform') }}" class="bg-blue text-white rounded-md px-3 text-sm font-medium">Sign-up</a>
-              </div>
             @endguest
+            @auth
+              @if(Auth::user() && Auth::user()->role == 'administrator')
+                <a href="{{ route('register.perform') }}" class="bg-blue text-white rounded-md px-3 text-sm font-medium">Sign-up</a>
+                <a href="{{ route('register.userlists') }}" class="bg-blue text-white rounded-md px-3 text-sm font-medium">{{__('All User')}}</a>
+              @endif
+            @endauth
+          </div>
             @auth
               <button type="button" class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="sr-only">View notifications</span>
@@ -80,12 +89,12 @@
                   From: "transform opacity-100 scale-100"
                   To: "transform opacity-0 scale-95"
               -->
-              <div id="dropdown-profile" class="transition hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+              {{-- <div id="dropdown-profile" class="transition hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1"> --}}
                 <!-- Active: "bg-gray-100", Not Active: "" -->
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+                {{-- <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
-              </div>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a> --}}
+              {{-- </div> --}}
               @endauth
           </div>
         </div>

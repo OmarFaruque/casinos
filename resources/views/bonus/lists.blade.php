@@ -1,15 +1,15 @@
 @extends('layouts.app-master')
 
 @section('content')
-    <div class="listsconetnt max-w-full w-full overflow-hidden ">
-       <div class="px-5 py-8 w-full overflow-hidden">
+    <div class="listsconetnt max-w-full w-full overflow-x-hidden ">
+       <div class="px-5 py-8 w-full overflow-x-hidden">
         <a class="bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('bonus.create')}}">{{ __('New Entry') }}</a>
         
         <div class="w-full m-auto mt-9 justify-center overflow-x-auto max-w-full pb-5">
             @if(session('success'))
                 <div class="alert px-6 py-3 bg-blue-400 text-white mb-3 rounded">{{session('success')}}</div>
             @endif
-            <div class="slotWrap border rounded-md shadow-md overflow-hidden table min-w-full">
+            <div class="slotWrap border rounded-md shadow-md overflow-x-hidden w-full table min-w-full">
                 <div class="header table-header-group text-gray-800 bg-gray-200 px-6 py-2 w-max">
                    <div class="table-row">
                         <div class="px-2 py-3 table-cell align-middle w-40 min-w-fit" style="min-width: 120px;">{{ __('Casino Name') }}</div>
@@ -21,6 +21,12 @@
                         <div class="px-2 py-3 table-cell align-middle">{{ __('Profit(%)') }}</div>
                         <div class="px-2 py-3 table-cell align-middle w-24" style="min-width: 100px;">{{ __('Can Do?') }}</div>
                         <div class="px-2 py-3 table-cell align-middle">{{ __('Done?') }}</div>
+                        <div class="px-2 py-3 table-cell align-middle w-24">
+                            <span class='tooltip rounded shadow-lg p-1 px-3 bg-gray-100 text-gray-500 -mt-10'>
+                                <small>{{__('Wagering Requirements (x? | x | $total | xB?)')}}</small>
+                            </span>
+                            {{ __('Wagering') }}
+                        </div>
                         <div class="px-2 py-3 table-cell align-middle" style="min-width: 150px;">{{ __('Pay. Methods') }}</div>
                         <div class="px-2 py-3 table-cell align-middle has-tooltip">
                             <span class='tooltip rounded shadow-lg p-1 px-3 bg-gray-100 text-gray-500 -mt-10'>
@@ -79,7 +85,18 @@
                             <div class="px-2 py-3 table-cell align-middle ">€&nbsp;{{ $bonus->bonus ? $bonus->bonus : 0 }}</div>
                             <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->profit }}</div>
                             <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->cando }}</div>
-                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->cando }}</div>
+                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->done }}</div>
+
+                            <div class="px-2 py-3 flex-auto table-cell align-middle ">
+                                <div class="flex w-100">
+                                    <div class="border p-1 px-2">{{$bonus->wagering_name}}</div>
+                                    <div class="border p-1 px-2">{{$bonus->wagering_value}}</div>
+                                    <div class="border p-1">{{$bonus->wagering_total}}</div>
+                                    <div class="border p-1">{{number_format($bonus->wagering_total/$bonus->bonus, 2)}}</div>
+                                </div>
+                            </div>
+
+
                             <div class="px-2 py-3 flex-auto table-cell align-middle ">{{ implode(' | ', $bonus->payment_methods) }}</div>
                             <div class="px-2 py-3 flex-auto table-cell align-middle ">
                                 <div class="flex w-100">

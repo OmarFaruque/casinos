@@ -3,16 +3,37 @@
 @section('content')
     <div class="listsconetnt content-center justify-center w-full">
         <div class="grid h-full content-center justify-center">
-            <h2 class="text-center bold mb-5">{{__('New Workers')}}</h2>
+            <h2 class="text-center bold text-2xl mb-10">{{__('New Workers')}}</h2>
             <div class="flex flex-row w-full m-auto content-item-center h-full justify-center">
-                <form action="{{route('workers.store')}}" method="post">
+                <form 
+                    @if(Route::is('workers.create'))
+                        action="{{route('workers.store')}}"
+                    @else 
+                        action="{{route('workers.update', $worker)}}"
+                    @endif   
+                    method="post">
+                    @if(!Route::is('workers.create'))
+                        @method('PATCH')
+                    @endif
                     @csrf
-                    <div class="flex content-center grid-cols-4 gap-4 w-full justify-center">
+                    <div class="grid content-center grid-cols-2 gap-4 w-full justify-center">
                         <div class="">
-                            <input type="text" name="name" class="border rounded p-2 mr-2 w-full" id="name" value="">
+                            <label for="name">{{__('Name')}}</label>
+                            <input type="text" name="name" class="border rounded p-2 mr-2 w-full shadow" id="name" value="{{isset($worker) && $worker->name ? $worker->name : ''}}">
                         </div>
-                        <div class="flex content-center">
-                            <input type="submit" class="p-2 rounded border bg-gray-900 text-gray-200 px-6" value="{{__('Submit')}}">
+                        <div class="">
+                            <label for="assigned_user">{{__('Assigned User')}}</label>
+                            {{-- {{dd($users)}} --}}
+                            <select name="assigned_user" id="assigned_user" class="border rounded p-2 mr-2 w-full shadow">
+                                <option value="">{{__('User...')}}</option>
+                                
+                                @foreach($users as $user)
+                                    <option {{ isset($worker) && $user->id == $worker->assigned_user ? 'selected' : '' }} value="{{$user->id}}">{{!empty($user->display_name) ? $user->display_name : $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="content-center text-right col-span-2">
+                            <input type="submit" class="p-2 cursor-pointer rounded border bg-gray-900 text-gray-200 px-6" value="{{Route::is('workers.create') ? __('Submit') : __('Update')}}">
                         </div>
                     </div>
                 </form>
