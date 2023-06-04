@@ -135,7 +135,7 @@ class BonusController extends Controller
             }
 
             //Profit 
-            $v->profit = $v->deposit && $v->bonus ? ($v->bonus * 100 )  / $v->deposit . '%' : '';
+            $v->profit = $v->deposit && $v->bonus ? number_format(($v->bonus * 100 )  / $v->deposit, 2) . '%' : '';
 
             //Wagering total
             $v->wagering_total = $v->wagering_name == 'xdb' ? ($v->deposit + $v->bonus) * $v->wagering_value : $v->bonus * $v->wagering_value;

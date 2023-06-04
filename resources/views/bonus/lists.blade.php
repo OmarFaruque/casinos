@@ -5,11 +5,11 @@
        <div class="px-5 py-8 w-full overflow-x-hidden">
         <a class="bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('bonus.create')}}">{{ __('New Entry') }}</a>
         
-        <div class="w-full m-auto mt-9 justify-center overflow-x-auto max-w-full pb-5">
+        <div class="w-full m-auto mt-9 justify-center overflow-x-scroll max-w-full pb-5">
             @if(session('success'))
                 <div class="alert px-6 py-3 bg-blue-400 text-white mb-3 rounded">{{session('success')}}</div>
             @endif
-            <div class="slotWrap border rounded-md shadow-md overflow-x-hidden w-full table min-w-full">
+            <div class="slotWrap border rounded-md shadow-md w-full table min-w-full">
                 <div class="header table-header-group text-gray-800 bg-gray-200 px-6 py-2 w-max">
                    <div class="table-row">
                         <div class="px-2 py-3 table-cell align-middle w-40 min-w-fit" style="min-width: 120px;">{{ __('Casino Name') }}</div>
@@ -21,54 +21,30 @@
                         <div class="px-2 py-3 table-cell align-middle">{{ __('Profit(%)') }}</div>
                         <div class="px-2 py-3 table-cell align-middle w-24" style="min-width: 100px;">{{ __('Can Do?') }}</div>
                         <div class="px-2 py-3 table-cell align-middle">{{ __('Done?') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle w-24">
-                            <span class='tooltip rounded shadow-lg p-1 px-3 bg-gray-100 text-gray-500 -mt-10'>
-                                <small>{{__('Wagering Requirements (x? | x | $total | xB?)')}}</small>
-                            </span>
+                        <div class="px-2 py-3 table-cell align-middle w-24 tooltip-bottom-right" data-tooltip="{{__('Wagering Requirements (x? | x | $total | xB?)')}}">
                             {{ __('Wagering') }}
                         </div>
                         <div class="px-2 py-3 table-cell align-middle" style="min-width: 150px;">{{ __('Pay. Methods') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle has-tooltip">
-                            <span class='tooltip rounded shadow-lg p-1 px-3 bg-gray-100 text-gray-500 -mt-10'>
-                                <small>{{__('If not banned (Country | Casino | Group)')}}</small>
-                            </span>
+                        <div class="tooltip-bottom px-2 py-3 table-cell align-middle" data-tooltip="{{__('If not banned (Country | Casino | Group)')}}">
                             {{ __('Ok to Play?') }}
                         </div>
-                        <div class="px-2 py-3 table-cell align-middle has-tooltip w-24">
-                            <span class='tooltip rounded shadow-lg p-1 bg-gray-100 text-gray-500 -mt-10'>
-                                <small>Last Time Gnome Done Casino Group (Criteria | Last Done | Ok?)</small>
-                            </span>
+                        <div class="px-2 py-3 table-cell align-middle w-24 tooltip-bottom" data-tooltip="{{__('Last Time Gnome Done Casino Group (Criteria | Last Done | Ok?)')}}">
                             {{ __('Done Group') }}
                         </div>
 
-                        <div class="px-2 py-3 table-cell align-middle flex-auto has-tooltip w-36">
-                            <span class='tooltip rounded shadow-lg p-1 bg-gray-100 text-gray-500 -mt-10'>
-                                <small>Last Time Anyone Done Casino (Criteria | Last Done | Ok?)</small>
-                            </span>
+                        <div class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-36" data-tooltip="{{__('Last Time Anyone Done Casino (Criteria | Last Done | Ok?)')}}">
                             {{ __('Any. Casino') }}
                         </div>
-                        <div class="px-2 py-3 table-cell align-middle flex-auto has-tooltip w-32">
-                            <span class='tooltip rounded shadow-lg p-1 bg-gray-100 text-gray-500 -mt-10'>
-                                <small>Last Time Anyone Done Group (Criteria | Last Done | Ok?)</small>
-                            </span>
+                        <div class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-32" data-tooltip="{{__('Last Time Anyone Done Group (Criteria | Last Done | Ok?)')}}">
                             {{ __('Any. Group') }}
                         </div>
-                        <div class="px-2 py-3 table-cell align-middle flex-auto has-tooltip">
-                            <span class='tooltip rounded shadow-lg p-1 bg-gray-100 text-gray-500 -mt-10'>
-                                <small>Pending Payouts for Gnome in this Group (Criteria | Owed | Ok?)</small>
-                            </span>
+                        <div class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom" data-tooltip="{{__('Pending Payouts for Gnome in this Group (Criteria | Owed | Ok?)')}}">
                             {{ __('Pen. Payout') }}
                         </div>
-                        <div class="px-2 py-3 table-cell align-middle flex-auto has-tooltip w-40">
-                            <span class='tooltip rounded shadow-lg p-1 bg-gray-100 text-gray-500 -mt-10'>
-                                <small>Total Pending Payouts for Everyone for this Group (Criteria | Owed | Ok?)</small>
-                            </span>
+                        <div class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-40" data-tooltip="{{__('Total Pending Payouts for Everyone for this Group (Criteria | Owed | Ok?)')}}">
                             {{ __('Every. Payout') }}
                         </div>
-                        <div class="px-2 py-3 flex-auto table-cell align-middle has-tooltip">
-                            <span class='tooltip rounded shadow-lg p-1 bg-gray-100 text-gray-500 -mt-10'>
-                                <small>SUB Pending Payouts for Everyone in this Group (Criteria | Owed | Ok?)</small>
-                            </span>
+                        <div class="px-2 py-3 flex-auto table-cell align-middle tooltip-bottom-right" data-tooltip="{{__('SUB Pending Payouts for Everyone in this Group (Criteria | Owed | Ok?)')}}">
                             {{ __('Sub Payout') }}
                         </div>
                         <div class="px-2 py-3 flex-auto">{{__('Action')}}</div>
