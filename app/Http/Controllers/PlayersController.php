@@ -10,6 +10,7 @@ use App\Models\Players;
 use App\Models\Workers;
 use App\Models\Gnomeinfo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PlayersRequests;
 
 class PlayersController extends Controller
@@ -17,19 +18,31 @@ class PlayersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($type='')
     {
-        $allCasinosDones = Players::select('players.*', 'gnomeinfos.name as name', 'groups.name as group', 'casinos.name as casino_name', 'bonuses.casino_lookup as bonus_lookup_casino_name')
+        $allCasinosDones = Players::select('players.*', 'gnomeinfos.name as name', 'gnomeinfos.id as gnome_id', 'groups.name as group', 'groups.id as group_id', 'casinos.name as casino_name', 'slots.name as slot_name', 'slots.id as slot_id')
         ->leftJoin('gnomeinfos', 'gnomeinfos.id', '=', 'players.name')
         ->leftJoin('groups', 'groups.id', '=', 'players.group')
         ->leftJoin('casinos', 'casinos.id', '=', 'players.casino')
         ->leftJoin('bonuses', 'bonuses.id', '=', 'players.casino_bonus_lookup')
-        ->get(); 
+        ->leftJoin('slots', 'slots.id', '=', 'players.game_played'); 
 
-        //dd($allCasinosDones);
+        if(!empty($type))
+            $allCasinosDones->where('players.type', $type);
+
+        $allCasinosDones = $allCasinosDones->get(); 
+
+        $gnomes = Gnomeinfo::select('id', 'name')->get();
+        $groups = Group::select('id', 'name')->get();
         
         return view('casinodone.lists')->with([
-            'casino_dones' => $allCasinosDones
+            'casino_dones' => $allCasinosDones, 
+            'status_lists' => $this->status_lists(), 
+            'gnomes' => json_encode(htmlentities($gnomes)), 
+            'types' => $this->all_types(), 
+            'groups' => json_encode(htmlentities($groups)), 
+            'payment_methods' => $this->Payment_methods(), 
+            'slots' => $this->all_slots()
         ]);
     }
 
@@ -147,13 +160,39 @@ class PlayersController extends Controller
         ]);
     }
 
+
+    /**
+     * Store data via ajax
+     */
+    public function ajaxstore(PlayersRequests $request){
+        $userWorkerid = Workers::select('id')->where('assigned_user', Auth::user()->id)->first();
+        
+        $casinoDone = new Players;
+        $casinoDone->name                   = $request->name;
+        $casinoDone->date                   = $request->date;
+        $casinoDone->type                   = $request->type;
+        $casinoDone->group                  = !empty($request->group) ? $request->group : '';
+        $casinoDone->payment_method         = !empty($request->payment_method) ? $request->payment_method : '';
+        $casinoDone->deposit                = !empty($request->deposit) ? $request->deposit : 0;
+        $casinoDone->bonus                  = !empty($request->bonus) ? $request->bonus :0;
+        $casinoDone->balance                = !empty($request->balance) ? $request->balance : 0;
+        $casinoDone->status                 = $request->status;
+        $casinoDone->game_played            = $request->game_played;
+        $casinoDone->rtp                    = $request->rtp;
+        $casinoDone->worker                 = $userWorkerid->id;
+        $casinoDone->notes                  = !empty($request->notes) ? $request->notes : '';
+        $casinoDone->save();
+
+        return response()->json(['success'=>'Laravel ajax example is being processed.']);
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(PlayersRequests $request)
     {
+        $userWorkerid = Workers::select('id')->where('assigned_user', Auth::user()->id)->first();
+        
         $casinoDone = new Players;
-
         $casinoDone->name                   = $request->name;
         $casinoDone->date                   = $request->date;
         $casinoDone->casino_bonus_lookup    = $request->casino_bonus_lookup;
@@ -170,7 +209,7 @@ class PlayersController extends Controller
         $casinoDone->game_played            = $request->game_played;
         $casinoDone->spin                   = $request->spin;
         $casinoDone->rtp                    = $request->rtp;
-        $casinoDone->worker                 = $request->worker;
+        $casinoDone->worker                 = $userWorkerid->id;
         $casinoDone->notes                  = !empty($request->notes) ? $request->notes : '';
 
         $casinoDone->save();
@@ -205,11 +244,39 @@ class PlayersController extends Controller
         ]);
     }
 
+
+    /**
+     * Update the specified resource in storage using ajax
+     */
+    public function ajaxupdate(PlayersRequests $request, string $id){
+        $userWorkerid = Workers::select('id')->where('assigned_user', Auth::user()->id)->first();
+        $casinoDone = Players::find($id);
+        $casinoDone->name                   = $request->name;
+        $casinoDone->date                   = $request->date;
+        $casinoDone->type                   = $request->type;
+        $casinoDone->group                  = !empty($request->group) ? $request->group : '';
+        $casinoDone->payment_method         = !empty($request->payment_method) ? $request->payment_method : '';
+        $casinoDone->deposit                = !empty($request->deposit) ? $request->deposit : 0;
+        $casinoDone->bonus                  = !empty($request->bonus) ? $request->bonus :0;
+        $casinoDone->balance                = !empty($request->balance) ? $request->balance : 0;
+        $casinoDone->status                 = $request->status;
+        $casinoDone->game_played            = $request->game_played;
+        $casinoDone->spin                   = $request->spin;
+        $casinoDone->rtp                    = $request->rtp;
+        $casinoDone->worker                 = $userWorkerid->id;
+        $casinoDone->notes                  = !empty($request->notes) ? $request->notes : '';
+
+        $casinoDone->save();
+
+        return response()->json(['msg'=>'success', 'done' => $casinoDone]);
+    }
+
     /**
      * Update the specified resource in storage.
      */
     public function update(PlayersRequests $request, string $id)
     {
+        $userWorkerid = Workers::select('id')->where('assigned_user', Auth::user()->id)->first();
         $casinoDone = Players::find($id);
         $casinoDone->name                   = $request->name;
         $casinoDone->date                   = $request->date;
@@ -227,7 +294,7 @@ class PlayersController extends Controller
         $casinoDone->game_played            = $request->game_played;
         $casinoDone->spin                   = $request->spin;
         $casinoDone->rtp                    = $request->rtp;
-        $casinoDone->worker                 = $request->worker;
+        $casinoDone->worker                 = $userWorkerid->id;
         $casinoDone->notes                  = !empty($request->notes) ? $request->notes : '';
 
         $casinoDone->save();
@@ -240,6 +307,9 @@ class PlayersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $casinodone = Players::find($id);
+        $casinodone->delete();
+
+        return redirect('casinos-done')->with('success','Delete casino done successfully');
     }
 }

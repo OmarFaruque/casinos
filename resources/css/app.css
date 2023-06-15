@@ -1,4 +1,5 @@
 @import url(../../node_modules/css-tooltip/dist/css-tooltip.min.css);
+@import url(../../node_modules/datatables.net-dt/css/jquery.dataTables.min.css);
 @tailwind base;
 @tailwind components;
 .tooltip {
@@ -10,3 +11,10 @@
   }
 @tailwind utilities;
 
+.dataTables_filter {
+  margin-bottom: 10px;
+}
+.dataTables_scrollHeadInner{margin: 0 auto;}
+tr.singleslot:hover td a.quickEdit{
+  display: block;
+}

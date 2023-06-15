@@ -16,6 +16,8 @@
     "dependencies": {
         "chart.js": "^4.3.0",
         "css-tooltip": "^0.3.4",
+        "datatables": "^1.10.18",
+        "datatables.net-dt": "^1.13.4",
         "flowbite": "^1.6.5",
         "jquery": "^3.6.4"
     }

@@ -2,44 +2,73 @@
 
 @section('content')
     <div class="listsconetnt w-full px-5 py-8">
-        <a class="bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('new-casino-done')}}">{{ __('New Entry') }}</a>
+        {{-- <a class="bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('new-casino-done')}}">{{ __('New Entry') }}</a> --}}
         <div class="w-full m-auto mt-9">
             @if(session('success'))
                 <div class="alert px-6 py-3 bg-blue-400 text-white mb-3 rounded">{{session('success')}}</div>
             @endif
-            <div class="slotWrap border rounded-md shadow-md table w-full">
-                <div class="table-header-group w-max">
-                    <div class=" table-row text-gray-800 bg-gray-200 px-6 py-2">
-                        <div class="px-2 py-3 table-cell ">{{ __('Name') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Date') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Casino Lookup') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Type') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Casino') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Group') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Payment Method') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Deposit') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Bonus') }}</div>
-                        <div class="px-2 py-3 table-cell ">{{ __('Balance') }}</div>
-                        
-                        <div class="px-2 py-3 table-cell ">{{__('Action')}}</div>
-                    </div>
-                </div>
-                <div class="body table-row-group">
+
+            <table class="dataTable dataTableCasinoDone slotWrap border shadow-md table w-full" data-token={{csrf_token()}} data-action={{route('players.ajaxstore')}} data-gnomes={!! $gnomes !!} data-types={!! json_encode($types) !!} data-groups={!! $groups !!} data-payment_methods={!! json_encode($payment_methods) !!} data-statuslists="{!! htmlspecialchars(json_encode($status_lists)) !!}" data-slots={!! $slots !!}>
+                <thead class="table-header-group w-max">
+                    <tr class=" table-row text-gray-800 bg-gray-200 px-6 py-2">
+                        <th class="px-2 py-3 table-cell ">{{ __('Name') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Date') }}</th>
+                        {{-- <th class="px-2 py-3 table-cell ">{{ __('Casino Lookup') }}</th> --}}
+                        <th class="px-2 py-3 table-cell ">{{ __('Type') }}</th>
+                        {{-- <div class="px-2 py-3 table-cell ">{{ __('Casino') }}</div> --}}
+                        <th class="px-2 py-3 table-cell ">{{ __('Group') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Payment Method') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Deposit') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Bonus') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Balance') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Status') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Game Played') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('RTP') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{__('Action')}}</th>
+                    </tr>
+                </thead>
+                <tbody class="body table-row-group">
                     @foreach($casino_dones as $done)
-                        <div class="singleslot table-row px-6 py-2">
-                            <div class="px-2 py-3 table-cell">{{ $done->name }}</div>
-                            <div class="px-2 py-3  table-cell w-1/4">{{ $done->date }}</div>
-                            <div class="px-2 py-3  table-cell">{{ $done->bonus_lookup_casino_name }}</div>
-                            <div class="px-2 py-3  table-cell">{{ $done->type }}</div>
-                            <div class="px-2 py-3  table-cell">{{ $done->casino_name }}</div>
-                            <div class="px-2 py-3  table-cell">{{ $done->group }}</div>
-                            <div class="px-2 py-3  table-cell">€&nbsp;{{ $done->payment_method }}</div>
-                            <div class="px-2 py-3  table-cell">{{ $done->deposit }}</div>
-                            <div class="px-2 py-3  table-cell">{{ $done->bonus }}</div>
-                            <div class="px-2 py-3  table-cell">{{ $done->balance }}</div>
-                            <div class="px-2 py-3 table-cell gap-1">
+                        <tr class="singleslot table-row px-6 py-2" data-done="{!! htmlspecialchars(json_encode($done)) !!}">
+                            <td class="px-2 py-3 table-cell relative name">
+                                <span>{{ $done->name }}</span>
+                                <a class="absolute hidden quickEdit left-2 bottom-0 text-sm text-blue-500" href="#">{{__('Quick Edit')}}</a>
+                            </td>
+                            <td class="px-2 py-3  table-cell date">
+                                <span>{{ $done->date }}</span>
+                            </td>
+                            {{-- <td class="px-2 py-3  table-cell">{{ $done->bonus_lookup_casino_name }}</td> --}}
+                            <td class="px-2 py-3  table-cell type">
+                                <span>{{ $done->type }}</span>
+                            </td>
+                            {{-- <div class="px-2 py-3  table-cell">{{ $done->casino_name }}</div> --}}
+                            <td class="px-2 py-3  table-cell group">
+                                <span>{{ $done->group }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell uppercase payment_method">
+                                <span>{{ $done->payment_method }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell deposit">
+                                <span>{{ $done->deposit }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell bonus">
+                                <span>{{ $done->bonus }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell balance">
+                                <span>{{ $done->balance }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell status">
+                                <span>{{ $status_lists[$done->status] }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell slot_name">
+                                <span>{{ $done->slot_name }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell rtp">
+                                <span>{{ !empty($done->rtp) ? number_format($done->rtp, 2) . '%' : '' }}</span>
+                            </td>
+                            <td class="px-2 py-3 table-cell gap-1 action">
                                 <div class="flex gap-2">
-                                    <a href="{{route('players.edit', $done)}}" class="px-3 py-3 border rounded hover:text-gray-50 hover:bg-gray-800">
+                                    <a data-url={{route('players.ajaxupdate', $done->id)}} href="{{route('players.edit', $done)}}" class="px-3 py-3 border pEdit rounded hover:text-gray-50 hover:bg-gray-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -55,11 +84,18 @@
                                         </button>
                                     </form>
                                 </div>
-                            </div>
-                        </div>
+                            </td>
+                        </tr>
                     @endforeach
-                </div>
-            </div>
+                </tbody>
+            </table>
+        </div>
+        <div class="addNew justify-end flex w-full mt-5">
+            <button type="button" id="addNewCasinoDone" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-circle-fill hover:text-gray-900 text-gray-600" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                </svg>
+            </button>
         </div>
     </div>
 

@@ -27,7 +27,12 @@
                                     <option {{isset($done) && $done->name == $name->id ? 'selected' : ''}}  value="{{$name->id}}">{{$name->name}}</option>
                                 @endforeach
                             </select>
-
+                            <a class="mt-5 text-gray-400 hover:text-gray-600" href="{{route('gnomeinfo.create')}}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus inline-block" viewBox="0 0 16 16">
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                                <small>{{__('Add New')}}</small>
+                            </a>
                         </div>
                         <div class="">
                             <label for="date">{{__('Date')}}</label>
@@ -41,6 +46,12 @@
                                     <option {{isset($done) && $done->casino_bonus_lookup == $bonus->id ? 'selected' : ''}}  value="{{$bonus->id}}">{{$bonus->casino_lookup}}</option>
                                 @endforeach
                             </select>
+                            <a class="mt-5 text-gray-400 hover:text-gray-600" href="{{route('bonus.create')}}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus inline-block" viewBox="0 0 16 16">
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                                <small>{{__('Add New')}}</small>
+                            </a>
                         </div>
                         <div class="">
                             <label for="type">{{__('Type')}}</label>
@@ -126,10 +137,10 @@
 
                         <div class="">
                             <label for="rtp">{{__('RTP (%)')}}</label>
-                            <input type="number" name="rtp" class="border rounded p-2 mr-2 shadow w-full" id="rtp" min="0" max="100" value="{{ isset($done) ? $done->rtp : '' }}">
+                            <input type="number" name="rtp" class="border rounded p-2 mr-2 shadow w-full" id="rtp" min="0" step="0.01" max="100" value="{{ isset($done) ? $done->rtp : '' }}">
                         </div>
 
-                        <div class="col-span-2">
+                        {{-- <div class="col-span-2">
                             <label for="worker">{{__('Worker')}}</label>
                             <select name="worker" id="worker" class="h-11 border rounded p-2 mr-2 shadow w-full" >
                                 <option value="">{{ __('Select a Worker') }}</option>
@@ -137,9 +148,9 @@
                                     <option {{ isset($done) && $done->worker == $worker->id ? 'selected':'' }} value="{{ $worker->id }}">{{$worker->name}}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-span-3">
+                        <div class="col-span-2">
                             <label for="notes">{{__('Notes')}}</label>
                             <input type="text" name="notes" class="border rounded p-2 mr-2 shadow w-full" id="notes" value="{{ isset($done) ? $done->notes : '' }}">
                         </div>

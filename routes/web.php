@@ -30,7 +30,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
     /**
      * Home Routes
      */
-    Route::get('/', 'HomeController@index')->name('home.index');
+    Route::get('/', 'OverviewController@index')->name('overview.index');
+    // Route::get('/', 'HomeController@index')->name('overview.index');
 
     Route::group(['middleware' => ['guest']], function() {
         /**
@@ -67,12 +68,15 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
          * Casinos done resources
          */
         Route::get('casinos-done', 'PlayersController@index')->name('casinos-done');
+        Route::get('casinos-done/{type}/lists', 'PlayersController@index')->name('casinos-done-lists');
         Route::get('casinos-summary', 'PlayersController@summary')->name('casinos-summary');
         Route::get('new-casino-done', 'PlayersController@create')->name('new-casino-done');
         Route::post('players.store', 'PlayersController@store')->name('players.store');
         Route::patch('players/{id}/update', 'PlayersController@update')->name('players.update');
+        Route::patch('players/{id}/ajaxupdate', 'PlayersController@ajaxupdate')->name('players.ajaxupdate');
         Route::get('players/{id}/edit', 'PlayersController@edit')->name('players.edit');
-        Route::post('players.destroy', 'PlayersController@edit')->name('players.destroy');
+        Route::delete('players/{id}/destroy', 'PlayersController@destroy')->name('players.destroy');
+        Route::post('players.ajaxstore', 'PlayersController@ajaxstore')->name('players.ajaxstore');
 
         /**
          * Slots Route

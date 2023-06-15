@@ -9,11 +9,14 @@
             @if(session('success'))
                 <div class="alert px-6 py-3 bg-blue-400 text-white mb-3 rounded">{{session('success')}}</div>
             @endif
+
+ 
+
             <div class="slotWrap border rounded-md shadow-md w-full table min-w-full">
                 <div class="header table-header-group text-gray-800 bg-gray-200 px-6 py-2 w-max">
                    <div class="table-row">
                         <div class="px-2 py-3 table-cell align-middle w-40 min-w-fit" style="min-width: 120px;">{{ __('Casino Name') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle w-28">{{ __('Lookup') }}</div>
+                        {{-- <div class="px-2 py-3 table-cell align-middle w-28">{{ __('Lookup') }}</div> --}}
                         <div class="px-2 py-3 table-cell align-middle">{{ __('Prtn') }}</div>
                         <div class="px-2 py-3 table-cell align-middle w-24" style="min-width: 100px;">{{ __('Group') }}</div>
                         <div class="px-2 py-3 table-cell align-middle">{{ __('Deposit') }}</div>
@@ -54,7 +57,7 @@
                     @foreach($bonuss as $bonus)
                         <div class="singleslot table-row px-6 py-2">
                             <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->casino_name }}</div>
-                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->casino_lookup }}</div>
+                            {{-- <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->casino_lookup }}</div> --}}
                             <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->prtn }}</div>
                             <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->group_name }}</div>
                             <div class="px-2 py-3 table-cell align-middle ">€&nbsp;{{ $bonus->deposit ? $bonus->deposit : 0 }}</div>

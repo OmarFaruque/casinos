@@ -1,9 +1,9 @@
 @extends('layouts.app-master')
 
 @section('content')
-    <div class="listsconetnt content-center justify-center w-full">
+    <div class="listsconetnt content-center justify-center w-full mt-10">
         <div class="grid h-full content-center justify-center">
-            <h2 class="text-center bold mb-5 text-2xl"><strong>{{__('New Gnome')}}</strong></h2>
+            <h2 class="text-center bold mb-5 text-2xl"><strong>{{ Route::is('gnomeinfo.create') ? __('New Gnome') : __('Update Gnome') }}</strong></h2>
             <div class="grid w-full m-auto content-item-center h-full justify-center">
                 <form 
                     @if(Route::is('gnomeinfo.create'))
@@ -34,17 +34,21 @@
                         </div>
                         <div class="">
                             <label for="worker">{{__('Worker')}}</label>
-                            <select name="worker" id="worker" class="border rounded p-2 mr-2 w-full shadow">
+                            <select name="worker" id="worker" class="border rounded px-2 py-2.5 mr-2 w-full shadow">
                                 <option value="">{{__('Worker...')}}</option>
                                 @foreach($workers as $worker)
                                     <option {{ isset($gnome) && $worker->id == $gnome->worker ? 'selected' : '' }} value="{{$worker->id}}">{{$worker->name}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-span-2">
+                        <div class="">
                             <label for="email">{{__('Email')}}</label>
                             <input type="email" name="email" class="border rounded p-2 mr-2 w-full shadow {{ $errors->get('email') ? 'border-orange-600' : '' }}" id="email" value="{{isset($gnome) && $gnome->email ? $gnome->email : ''}}">
                             @if($errors->get('email')) <div class="text-orange-600"><small>{{$errors->first('email')}}</small></div> @endif
+                        </div>
+                        <div class="">
+                            <label for="wallet_id">{{__('Wallet ID')}}</label>
+                            <input type="text" placeholder="{{__('Wallet ID')}}" name="wallet_id" class="border rounded p-2 mr-2 w-full shadow" id="wallet_id" value="{{isset($gnome) && $gnome->wallet_id ? $gnome->wallet_id : ''}}">
                         </div>
                         <div class="col-span-3 flex justify-end">
                             <button type="submit" class="btn justify-end py-2 hover:bg-gray-900 hover:text-gray-50 transition  border px-5 rounded-md">{{Route::is('gnomeinfo.create') ? __('Submit') : __('Update')}}</button>

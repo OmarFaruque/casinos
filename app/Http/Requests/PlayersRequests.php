@@ -24,7 +24,6 @@ class PlayersRequests extends FormRequest
         return [
             'name' => 'required', 
             'date' => 'required', 
-            'casino_bonus_lookup' => 'required', 
             'type' => 'required'
         ];
     }

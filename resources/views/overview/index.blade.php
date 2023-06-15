@@ -7,26 +7,45 @@
                 <div class="alert px-6 py-3 bg-blue-400 text-white mb-3 rounded">{{session('success')}}</div>
             @endif
             <div class="slotWrap w-full mx-auto">
-                <div class="grid grid-cols-2 gap-10">
+                <div class="grid gap-10">
                     <div class="">
                         <h2 class="mb-5 font-normal text-2xl">{{__('Statistics')}}</h2>
                         <form action="{{route('overview.index')}}" method="post">
                             @csrf
-                            <div class="grid gap-6 grid-cols-3 items-end mb-8">
+                            
+                            <div class="grid gap-6 grid-cols-5 items-end mb-8">
                                 <div class="">
                                     <label for="from">{{__('From')}}</label>
-                                    <input type="date" name="from" id="from" class="border rounded w-full px-2 py-3 shadow" value={{old('from')}}>
+                                    <input type="date" name="from" id="from" class="border rounded w-full px-2 py-3 shadow" value={{$forms['from']}}>
                                 </div>
                                 <div class="">
                                     <label for="to">{{__('To')}}</label>
-                                    <input type="date" name="to" id="to" class="border rounded w-full px-2 py-3 shadow" value={{old('to')}}>
+                                    <input type="date" name="to" id="to" class="border rounded w-full px-2 py-3 shadow" value={{$forms['to']}}>
                                 </div>
                                 <div class="">
-                                    <input type="submit" class="px-5 py-3 border rounded w-4/6 bg-slate-600 shadow text-cyan-100 cursor-pointer hover:bg-slate-800 hover:text-cyan-50" value="{{__('Submit')}}">
+                                    <label for="worker">{{__('Worker/Staff')}}</label>
+                                    <select name="worker" id="worker" class="border rounded w-full px-2 py-4 shadow">
+                                        <option value="">{{__('All')}}</option>
+                                        @foreach($workers as $worker)
+                                            <option {{$forms['worker'] == $worker->id ? 'selected' : ''}} value="{{$worker->id}}">{{$worker->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="">
+                                    <label for="gnome">{{__('Gnome')}}</label>
+                                    <select name="gnome" id="gnome" class="border rounded w-full px-2 py-4 shadow">
+                                        <option value="">{{__('All')}}</option>
+                                        @foreach($gnomes as $gnome)
+                                            <option {{$forms['gnome'] == $gnome->id ? 'selected' : ''}} value="{{$gnome->id}}">{{$gnome->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="">
+                                    <input type="submit" class="px-5 py-3.5 border rounded w-full bg-slate-600 shadow text-cyan-100 cursor-pointer hover:bg-slate-800 hover:text-cyan-50" value="{{__('Submit')}}">
                                 </div>
                             </div>
                         </form>
-                        <div class="body grid gap-6 grid-cols-3">
+                        <div class="body grid gap-6 grid-cols-4">
                             <div class="shadow flex rounded px-5 items-center py-6 justify-between bg-slate-100">
                                 <h3><strong>{{__('Total Owed')}}</strong></h3>
                                 <div><span>{{ $casino_dones->total_owed }}</span></div>
@@ -54,6 +73,18 @@
                             <div class="shadow flex rounded justify-between items-center px-5 py-6 bg-slate-100">
                                 <h3><strong>{{__('Profit')}}</strong></h3>
                                 <span>{{ $casino_dones->total_profit }}</span>
+                            </div>
+                            <div class="shadow flex rounded justify-between items-center px-5 py-6 bg-slate-100">
+                                <h3><strong>{{__('Total Deposit')}}</strong></h3>
+                                <span>{{ $casino_dones->total_deposit }}</span>
+                            </div>
+                            <div class="shadow flex rounded justify-between items-center px-5 py-6 bg-slate-100">
+                                <h3><strong>{{__('Withdraws')}}</strong></h3>
+                                <span>{{ $casino_dones->total_withdraws }}</span>
+                            </div>
+                            <div class="shadow flex rounded justify-between items-center px-5 py-6 bg-slate-100">
+                                <h3><strong>{{__('Balance')}}</strong></h3>
+                                <span>{{ $casino_dones->total_balance }}</span>
                             </div>
                         </div>
                     </div>

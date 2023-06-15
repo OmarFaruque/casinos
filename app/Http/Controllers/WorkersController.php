@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Players;
 use App\Models\Workers;
+use App\Models\Gnomeinfo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\WorkersRequest;
 
 class WorkersController extends Controller
@@ -20,6 +22,8 @@ class WorkersController extends Controller
         ->get()
         ->map(function($v){
             $totalUserProfit = Players::selectRaw('(SUM(case when status <> "all-paid" AND status <> "dispute" then balance END)  - sum(case when partpaid IS NOT NULL then partpaid END)) as total_owed')->where('worker', $v->id)->first();
+            $allGnoms = Gnomeinfo::selectRaw('group_concat(name SEPARATOR ", ") as names')->where('worker', $v->id)->first();
+            $v->gnomes = $allGnoms->names;
             $v->owed = $totalUserProfit->total_owed;
             return $v;
         });
@@ -47,6 +51,7 @@ class WorkersController extends Controller
     {
         $worker = new Workers;
         $worker->name = $request->name;
+        $worker->wallet_id = $request->wallet_id;
         $worker->assigned_user = $request->assigned_user;
         $worker->save();
 
@@ -81,7 +86,9 @@ class WorkersController extends Controller
     {
         $worker = Workers::find($id);
         $worker->name = $request->name;
+        $worker->wallet_id = $request->wallet_id;
         $worker->assigned_user = $request->assigned_user;
+
         $worker->save();
 
         return redirect('workers')->with('success','Updated successfully');

@@ -42,6 +42,7 @@ class GnomeinfoController extends Controller
         $gnomeinfo->code = $request->code;
         $gnomeinfo->worker = $request->worker;
         $gnomeinfo->email = $request->email;
+        $gnomeinfo->wallet_id = $request->wallet_id;
 
         $gnomeinfo->save();
 
@@ -77,6 +78,7 @@ class GnomeinfoController extends Controller
         $gnomeinfo->code        = $request->code;
         $gnomeinfo->email       = $request->email;
         $gnomeinfo->worker      = $request->worker;
+        $gnomeinfo->wallet_id   = $request->wallet_id;
         $gnomeinfo->save();
         return redirect('gnomeinfo')->with('success','Updated successfully');
     }
