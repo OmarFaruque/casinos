@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class OverviewController extends Controller
 {
+
+
+    public function ajax_getgnomesbyworkerid(Request $request){
+        $gnomes = Gnomeinfo::where('worker', $request->worker_id)->get();
+        return response()->json(['msg'=>'success', 'gnomes' => $gnomes]);
+    }
+
      /**
      * Display a listing of the resource.
      */
@@ -33,23 +40,29 @@ class OverviewController extends Controller
         coalesce(count(case when type = "sub" OR type="reload" then bonus END)) as bonus_done
         ');
 
+        $charts = Players::selectRaw('date, coalesce(sum(balance)) - coalesce(sum(deposit)) as profit, coalesce(sum(bonus) * 0.45) as ev')->groupBy('date')->orderBy('date');
+
         if(isset($request->_token)){
             $from = isset($request->from) && !empty($request->from) ? $request->from : date('Y-m-d', strtotime('1970-01-01'));
             $to = isset($request->to) && !empty($request->to) ? $request->to : date('Y-m-d');
             $datas->whereBetween('date', [$from, $to]);
+            $charts->whereBetween('date', [$from, $to]);
 
             if(!empty($request->worker)){
                 $worker = $request->worker;
                 $datas->where('worker', $request->worker);
+                $charts->where('worker', $request->worker);
             }
             
             if(!empty($request->gnome)){
                 $gnome = $request->gnome;
                 $datas->where('name', $request->gnome);
+                $charts->where('name', $request->gnome);
             }
         }
 
         $datas = $datas->first();
+        $charts = $charts->get();
 
         $monthlyev = ($datas->whereRaw('DATE(date) >= DATE_SUB(CURDATE(), INTERVAL 8 DAY)')->sum('bonus') * 0.45) * 0.45;
       
@@ -62,7 +75,7 @@ class OverviewController extends Controller
         )->whereRaw('DATE(date) >= DATE_SUB(CURDATE(), INTERVAL 8 DAY)')
         ->groupBy('date')->get();
 
-        $charts = Players::selectRaw('date, coalesce(sum(balance)) - coalesce(sum(deposit)) as profit, coalesce(sum(bonus) * 0.45) as ev')->groupBy('date')->orderBy('date')->get();
+        
 
 
         $groupReports = Workers::select('id', 'name')->get()

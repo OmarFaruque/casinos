@@ -38,7 +38,7 @@ class WorkersController extends Controller
      */
     public function create()
     {
-        $users = User::select('id', 'display_name', 'name')->get();
+        $users = User::select('id', 'display_name', 'name', 'email')->get();
         return view('workers.create')->with([
             'users' => $users
         ]);
@@ -55,7 +55,7 @@ class WorkersController extends Controller
         $worker->assigned_user = $request->assigned_user;
         $worker->save();
 
-        return redirect('/workers/create')->with('success','Updated successfully');
+        return redirect('workers')->with('success','Assigned user as worker successfully.');
     }
 
     /**

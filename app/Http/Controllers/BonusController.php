@@ -206,7 +206,7 @@ class BonusController extends Controller
 
         $bonus                              = new Bonus;
         $bonus->gnome                       = $request->gnome;
-        $bonus->casino_lookup               = $request->casino_lookup;
+        // $bonus->casino_lookup               = $request->casino_lookup;
         $bonus->casino_name                 = $request->casino_name;
         $bonus->prtn                        = $request->prtn; 
         $bonus->group                       = $request->group;
@@ -268,7 +268,7 @@ class BonusController extends Controller
     {
         $bonus = Bonus::find($bonus);
         $bonus->gnome                       = $request->gnome;
-        $bonus->casino_lookup               = $request->casino_lookup;
+        // $bonus->casino_lookup               = $request->casino_lookup;
         $bonus->casino_name                 = $request->casino_name;
         $bonus->prtn                        = $request->prtn; 
         $bonus->group                       = $request->group;

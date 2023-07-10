@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="listsconetnt content-center justify-center w-full px-6">
-        <div class="grid h-full content-center justify-center px-6">
+        <a style="margin-top: 30px; margin-left: 30px;" class="mt-15 ml-18 inline-block bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('bonus.index')}}">{{ __('Bonus List') }}</a>
+        <div class="grid h-full content-center justify-center px-6 mt-4">
             <h2 class="text-center bold mb-5 text-2xl"><strong>{{__('New Bonus')}}</strong></h2>
             <div class="grid w-full m-auto content-item-center h-full justify-center">
             {{-- {{dd($bonus)}} --}}
@@ -21,7 +22,7 @@
                     @endif
                     @csrf
                     <div class="grid content-center grid-cols-3 gap-10 w-full justify-center">
-                        <div class="">
+                        {{-- <div class="">
                             <label for="gnome">{{__('Gnome')}}</label>
                             <select id="gnome" name="gnome" class="border rounded p-2 mr-2 w-full shadow {{ $errors->get('gnome') ? 'border-orange-600' : '' }}">
                                 <option value="">{{__('Select Gnome...')}}</option>
@@ -30,7 +31,7 @@
                                 @endforeach
                             </select>
                             @if($errors->get('gnome')) <div class="text-orange-600"><small>{{$errors->first('gnome')}}</small></div> @endif
-                        </div>
+                        </div> --}}
 
                         <div class="">
                             <label for="casino_name">{{__('Casino Name')}}</label>
@@ -42,16 +43,16 @@
                             </select>
                             @if($errors->get('casino_name')) <div class="text-orange-600"><small>{{$errors->first('casino_name')}}</small></div> @endif
                         </div>
-                        <div class="">
+                        {{-- <div class="">
                             <label for="casino_lookup">{{__('Casino Lookup')}}</label>
                             <input type="text" name="casino_lookup" class="border rounded p-2 mr-2 w-full shadow {{ $errors->get('casino_lookup') ? 'border-orange-600' : '' }}" id="name" value="{{isset($bonus) && $bonus->casino_lookup ? $bonus->casino_lookup : ''}}">
                             @if($errors->get('casino_lookup')) <div class="text-orange-600"><small>{{$errors->first('casino_lookup')}}</small></div> @endif
-                        </div>
+                        </div> --}}
 
-                        <div class="">
+                        {{-- <div class="">
                             <label for="prtn">{{__('Prtn')}}</label>
                             <input type="number" name="prtn" class="border rounded p-2 mr-2 w-full shadow {{ $errors->get('prtn') ? 'border-orange-600' : '' }}" id="prtn" value="{{isset($bonus) && $bonus->prtn ? $bonus->prtn : ''}}">
-                        </div>
+                        </div> --}}
 
                         <div class="">
                             <label for="group">{{__('Group')}}</label>
@@ -130,7 +131,7 @@
                             <label for="everyone_sub_pending_payout">{{__('SUB Pending Payouts for Everyone in this Group')}}</label>
                             <input type="number" min="0" name="everyone_sub_pending_payout" class="border rounded p-2 mr-2 w-full shadow" id="bonus" value="{{isset($bonus) && $bonus->everyone_sub_pending_payout ? $bonus->everyone_sub_pending_payout : ''}}">
                         </div>
-                        <div class="">
+                        <div class="col-span-3">
                             <label for="notes">{{__('Notes')}}</label>
                             <input type="text" name="notes" class="border rounded p-2 mr-2 w-full shadow" id="bonus" value="{{isset($bonus) && $bonus->notes ? $bonus->notes : ''}}">
                         </div>

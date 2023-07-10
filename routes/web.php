@@ -71,12 +71,15 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::get('casinos-done/{type}/lists', 'PlayersController@index')->name('casinos-done-lists');
         Route::get('casinos-summary', 'PlayersController@summary')->name('casinos-summary');
         Route::get('new-casino-done', 'PlayersController@create')->name('new-casino-done');
+        Route::get('casinos-done/incoming-payments', 'PlayersController@incoming_payments')->name('incoming-payments');
         Route::post('players.store', 'PlayersController@store')->name('players.store');
         Route::patch('players/{id}/update', 'PlayersController@update')->name('players.update');
         Route::patch('players/{id}/ajaxupdate', 'PlayersController@ajaxupdate')->name('players.ajaxupdate');
         Route::get('players/{id}/edit', 'PlayersController@edit')->name('players.edit');
         Route::delete('players/{id}/destroy', 'PlayersController@destroy')->name('players.destroy');
         Route::post('players.ajaxstore', 'PlayersController@ajaxstore')->name('players.ajaxstore');
+        Route::post('players.casinogroup', 'PlayersController@ajaxgetgroupbycasino')->name('players.casinogroup');
+        
 
         /**
          * Slots Route
@@ -104,6 +107,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function()
         Route::resource('profit', ProfitrangeController::class);
         
         Route::post('overview', 'OverviewController@index');
+        Route::post('overview.ajax_getgnomesbyworkerid', 'OverviewController@ajax_getgnomesbyworkerid')->name('overview.ajax_getgnomesbyworkerid');
         Route::resource('overview', OverviewController::class, ['except' => ['store']]);
     });
     

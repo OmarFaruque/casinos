@@ -2,8 +2,10 @@
 
 @section('content')
     <div class="listsconetnt content-center justify-center w-full">
-        <div class="grid h-full content-center justify-center">
-            <h2 class="text-center bold mb-5 text-2xl"><strong>{{__('New Slot')}}</strong></h2>
+        <div class="grid h-full content-center justify-center mt-20">
+            <h2 class="text-center bold mb-5 text-2xl"><strong>{{
+                Route::is('slot.create') ? __('New Slot') : __('Update Slot')}}
+                </strong></h2>
             <div class="grid w-full m-auto content-item-center h-full justify-center">
                 <form 
                     @if(Route::is('slot.create'))

@@ -58,20 +58,49 @@ $(document).ready(function($){
 
 
     // Data table 
-    $('.dataTable').dataTable({
-      scrollX: true,
-      'autoWidth': true, 
-      "columnDefs": [
-        { "width": "100px", "targets": 0 }, 
-        { "width": "150px", "targets": 1 }, 
-        { "width": "120px", "targets": 2 }, 
-        { "width": "70px", "targets": 3 }, 
-        { "width": "150px", "targets": 4 }, 
-        { "width": "160px", "targets": 9 },
-        { "width": "130px", "targets": 10 }
-      ]
-      // scrollCollapse: true,
-    });
+    if($('.dataTableCasinoDone').length){
+      $('.dataTable').dataTable({
+        scrollX: true,
+        'autoWidth': true, 
+        "columnDefs": [
+          { "width": "100px", "targets": 0 }, 
+          { "width": "150px", "targets": 1 }, 
+          { "width": "120px", "targets": 2 }, 
+          { "width": "70px", "targets": 3 }, 
+          { "width": "150px", "targets": 4 }, 
+          { "width": "180px", "targets": 5 }, 
+          { "width": "160px", "targets": 9 },
+          { "width": "130px", "targets": 10 }, 
+          { "width": "50px", "targets": 12 }
+        ]
+        // scrollCollapse: true,
+      });
+    }
+
+    // Bonus Table 
+    if($('.dataTableBonusLists').length){
+      $('.dataTableBonusLists').dataTable({
+        scrollX: true,
+        'autoWidth': true, 
+        "columnDefs": [
+          { "width": "100px", "targets": 0 }, 
+          { "width": "110px", "targets": 1 }, 
+          { "width": "110px", "targets": 2 }, 
+          { "width": "70px", "targets": 3 }, 
+          { "width": "100px", "targets": 4 }, 
+          { "width": "80px", "targets": 5 }, 
+          { "width": "130px", "targets": 7 }, 
+          { "width": "160px", "targets": 9 },
+          { "width": "130px", "targets": 10 }, 
+          { "width": "150px", "targets": 11 }, 
+          { "width": "150px", "targets": 12 },
+          { "width": "130px", "targets": 13 },
+          { "width": "130px", "targets": 14 },
+          { "width": "130px", "targets": 15 }
+        ]
+        // scrollCollapse: true,
+      });
+    }
 
     if($('.dataTableWorkers').length){
       $('.dataTableWorkers').dataTable({
@@ -84,11 +113,25 @@ $(document).ready(function($){
           { "width": "auto", "targets": 3 }
         ]
         // scrollCollapse: true,
-      });  
-
+      }); 
       $('table.dataTableWorkers, table.dataTable').css('width', '100%');
       $('div.dataTables_scroll, div.dataTables_scrollHeadInner').css('width', '100%');
     }
+
+    if($('.dataTableIncomentPayment').length){
+      $('.dataTableIncomentPayment').dataTable({
+        scrollX: true,
+        'autoWidth': true, 
+        "columnDefs": [
+          { "width": "200px", "targets": 0 }, 
+          { "width": "100px", "targets": 1 }, 
+          { "width": "150px", "targets": 2 }, 
+          { "width": "150px", "targets": 3 }, 
+          { "width": "150px", "targets": 11 }
+        ]
+        // scrollCollapse: true,
+      }); 
+    } 
 
     
 
@@ -131,17 +174,20 @@ $(document).ready(function($){
 
 
   // Add new casiono done in list
-
+if($('#addNewCasinoDone').length){
   var newItems = {
     casinoDoneBtn : document.getElementById('addNewCasinoDone'),
     gnomes : $('.dataTableCasinoDone').data('gnomes'), 
     types: $('.dataTableCasinoDone').data('types'), 
+    casinos: $('.dataTableCasinoDone').data('casinos'),
     groups: $('.dataTableCasinoDone').data('groups'), 
     payment_methods: $('.dataTableCasinoDone').data('payment_methods'), 
     statuslists: $('.dataTableCasinoDone').data('statuslists'), 
     slots: $('.dataTableCasinoDone').data('slots'), 
-    action: $('.dataTableCasinoDone').data('action'), 
-    token: $('.dataTableCasinoDone').data('token')
+    action: $('.dataTableCasinoDone').data('action'),
+    action_casinogroup: $('.dataTableCasinoDone').data('action_casinogroup'), 
+    token: $('.dataTableCasinoDone').data('token'), 
+    worker_id: $('.dataTableCasinoDone').data('worker_id')
   }
 
   newItems.casinoDoneBtn.addEventListener('click', function(){
@@ -159,6 +205,12 @@ $(document).ready(function($){
                       for(let v in newItems.types){
                         newItemHTML +='<option value="'+v+'">'+newItems.types[v]+'</option>'
                       };
+                      +'</select></td>';
+                      newItemHTML+= '<td> <select name="casino" id="casino" class="border rounded p-2 h-11 mr-2 shadow w-full">'
+                      +'<option value="">Select casino...</option>';
+                      for(var i = 0; i < newItems.casinos.length; i++){
+                        newItemHTML +='<option value="'+newItems.casinos[i].id+'">'+newItems.casinos[i].name+'</option>'
+                      }
                       +'</select></td>';
                       newItemHTML+= '<td> <select name="group" id="group" class="border rounded p-2 h-11 mr-2 shadow w-full">'
                       +'<option value="">Select a group...</option>';
@@ -187,8 +239,9 @@ $(document).ready(function($){
                       }
                       +'</select></td>';
                       newItemHTML+='<td><input type="number" name="rtp" class="border rounded p-2 mr-2 shadow w-full" id="rtp" min="0" step="0.01" max="100" value=""></td>'
-                      newItemHTML+='<td class="px-2 py-3 table-cell gap-1"> <div class="flex gap-2">'
-                      +'<button type="submit" class="submitQuickCasinoDone px-3 py-3 border rounded hover:text-gray-50 hover:bg-green-500">'
+                      newItemHTML+='<td><input type="number" name="spin" class="border rounded p-2 mr-2 shadow w-full" id="spin" min="0" step="1" value=""></td>'
+                      newItemHTML+='<td class="px-2 py-3 table-cell gap-1 action"> <div class="flex gap-2">'
+                      +'<button type="submit" class="submitQuickCasinoDone notDone px-3 py-3 border rounded hover:text-gray-50 hover:bg-green-500">'
                       +'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">'
                       +'<path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>'
                       +'</svg>'
@@ -202,7 +255,7 @@ $(document).ready(function($){
 
     $('table.dataTableCasinoDone tbody').append(newItemHTML);
   });
-
+}
 
   //Existing data edit 
   $(document.body).on('click', 'a.quickEdit', function(e){
@@ -212,7 +265,6 @@ $(document).ready(function($){
     tr.children('td').find('span').hide();
     let done = tr.data('done');
 
-    console.log('done is: ', done);
 
 
     // Name 
@@ -233,13 +285,22 @@ $(document).ready(function($){
                       };
                       +'</select>';
 
+    // Casino 
+    var casinoHtml = '<select name="casino" id="casino" class="border listcasino rounded p-2 mr-2 h-11 shadow w-full">'
+                    +'<option value="">Select Casino...</option>';
+                    for(var i = 0; i < newItems.casinos.length; i++){
+                      let selectedCasino = newItems.casinos[i].id == done.casino ? 'selected' : '';
+                      casinoHtml +='<option '+selectedCasino+' value="'+newItems.casinos[i].id+'">'+newItems.casinos[i].name+'</option>'
+                    }
+                    +'</select>';
+
     //Group
     var groupHtml = '<select name="group" id="group" class="border rounded p-2 h-11 mr-2 shadow w-full">'
-                      +'<option value="">Select a group...</option>';
-                      for(var i = 0; i < newItems.groups.length; i++){
-                        let selectedGroup = newItems.groups[i].id == done.group_id ? 'selected' : '';
-                        groupHtml +='<option '+selectedGroup+' value="'+newItems.groups[i].id+'">'+newItems.groups[i].name+'</option>'
-                      }
+                      +'<option value="">Select casino first</option>';
+                      // for(var i = 0; i < newItems.groups.length; i++){
+                      //   let selectedGroup = newItems.groups[i].id == done.group_id ? 'selected' : '';
+                      //   groupHtml +='<option '+selectedGroup+' value="'+newItems.groups[i].id+'">'+newItems.groups[i].name+'</option>'
+                      // }
                       +'</select>';
 
     // Payment methods
@@ -271,6 +332,7 @@ $(document).ready(function($){
     tr.children('td.name').append(nameHtml);
     tr.children('td.date').append('<input type="date" value="'+done.date+'" name="date" class="border rounded p-2 mr-2 w-full shadow" id="date">');
     tr.children('td.type').append(types);
+    tr.children('td.casino').append(casinoHtml);
     tr.children('td.group').append(groupHtml);
     tr.children('td.payment_method').append(pmethodHTML);
     tr.children('td.deposit').append('<input type="number" name="deposit" class="border rounded p-2 mr-2 shadow w-full" id="deposit" value="'+done.deposit+'">');
@@ -279,10 +341,84 @@ $(document).ready(function($){
     tr.children('td.status').append(statusHTML);
     tr.children('td.slot_name').append(gameHTML);
     tr.children('td.rtp').append('<input type="number" name="rtp" class="border rounded p-2 mr-2 shadow w-full" id="rtp" min="0" step="0.01" max="100" value="'+done.rtp+'">');
+    tr.children('td.spin').append('<input type="number" name="spin" class="border rounded p-2 mr-2 shadow w-full" id="spin" min="0" step="1" value="'+done.spin+'">');
     tr.children('td.action').find('a.pEdit').addClass('hrefBlock hover:bg-green-500').removeClass('hover:bg-gray-800').html('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg>');
   });
 
 
+
+
+
+  //Overview on change workers 
+  if($('.overviewWorker').length){
+    $(document.body).on('change', 'select[name="worker"].overviewWorker', function(){
+
+        let worker_id = $(this).val(), 
+        form = $(this).closest('form'),
+        _token = form.data('token'),
+        _action = form.data('action'),
+        overflowGnome = $('select[name="gnome"].overflowgnome'), 
+        gnomeOptions = ''
+
+        let data = {
+          worker_id: worker_id,
+          _token : _token
+        }
+        $.ajax({
+            url: _action,
+            method: 'POST',
+            data: data,
+            dataType: 'JSON',
+            success:function(response)
+            {
+              overflowGnome.html('<option value="">All</option>');
+              for(var i = 0; i < response.gnomes.length; i++){
+                gnomeOptions +='<option value="'+response.gnomes[i].id+'">'+response.gnomes[i].name+'</option>'
+              }
+              overflowGnome.append(gnomeOptions);
+              
+            },
+            error: function(response) {
+              console.log('errors: ', response);
+            }
+        });
+    });
+  }
+
+
+  // Append group while casino change from dropdown
+  $(document.body).on('change', 'select[name="casino"].listcasino', function(){
+    let groupOptions = '',
+    tr = $(this).closest('tr'),
+    done = tr.data('done'), 
+    casino_id = $(this).val();
+
+    
+
+
+    let data = {
+      casino_id: casino_id,
+      _token : newItems.token
+    }
+    $.ajax({
+        url: newItems.action_casinogroup,
+        method: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success:function(response)
+        {
+          for(var i = 0; i < response.groups.length; i++){
+            let selectedGroup = response.groups[i].id == done.group_id ? 'selected' : '';
+            groupOptions +='<option '+selectedGroup+' value="'+response.groups[i].id+'">'+response.groups[i].name+'</option>'
+          }
+          tr.find('select[name="group"]').append(groupOptions);
+          
+        },
+        error: function(response) {
+          console.log('errors: ', response)
+        }
+    });
+  });
 
 
   //Submit Update
@@ -306,10 +442,12 @@ $(document).ready(function($){
         status          : tr.find('select[name="status"]').val(), 
         game_played     : tr.find('select[name="game_played"]').val(), 
         rtp             : tr.find('input[name="rtp"]').val(), 
+        spin             : tr.find('input[name="spin"]').val(),
         _method         : "PATCH",
         _token          : newItems.token
       }
 
+      
       $.ajax({
         url: url,
         // method: 'POST',
@@ -318,15 +456,13 @@ $(document).ready(function($){
         dataType: 'JSON',
         success:function(response)
         {
-
-          console.log('response done: ', response.done);
           let slotIndex = newItems.slots.findIndex(p => p.id == response.done.game_played),
           nameIndex = newItems.gnomes.findIndex(p => p.id == response.done.name),
           groupIndex = newItems.groups.findIndex(p => p.id == response.done.group);
 
-          console.log('group index: ', groupIndex, 'htoupSttsy', newItems.groups[groupIndex]);
 
           tr.children('td.rtp').find('span').text(response.done.rtp);
+          tr.children('td.spin').find('span').text(response.done.spin);
           tr.children('td.slot_name').find('span').text(slotIndex >= 0 ? newItems.slots[slotIndex].name : '');
           tr.children('td.status').find('span').text(newItems.statuslists[response.done.status]);
           tr.children('td.balance').find('span').text(response.done.balance);
@@ -349,7 +485,8 @@ $(document).ready(function($){
     });
   });
 
-  $(document.body).on('click', 'button.submitQuickCasinoDone', function(){
+  $(document.body).on('click', 'button.submitQuickCasinoDone.notDone', function(){
+     $(this).removeClass('notDone');
       let tr = $(this).closest('tr'),
       data = {
         name            : tr.find('select[name="name"]').val(), 
@@ -362,10 +499,11 @@ $(document).ready(function($){
         balance         : tr.find('input[name="balance"]').val(),
         status          : tr.find('select[name="status"]').val(), 
         game_played     : tr.find('select[name="game_played"]').val(), 
+        casino          : tr.find('select[name="casino"]').val(), 
         rtp             : tr.find('input[name="rtp"]').val(), 
+        spin            : tr.find('input[name="spin"]').val(), 
         _token          : newItems.token
       }
-
       $.ajax({
         url: newItems.action,
         method: 'POST',
@@ -373,12 +511,35 @@ $(document).ready(function($){
         dataType: 'JSON',
         success:function(response)
         {
+          
+          console.log('response: ', response);
+
           var nameIndex = newItems.gnomes.findIndex(p => p.id == data.name);
-          var groupIndex = newItems.groups.findIndex(p => p.id == data.name);
+          var groupIndex = newItems.groups.findIndex(p => p.id == data.group);
+          let casinoIndex = newItems.casinos.findIndex(p => p.id == data.casino);
+          let slotIndex = newItems.slots.findIndex(p => p.id == data.game_played);
+
+          let SelectedCasino = casinoIndex > -1 ? newItems.casinos[casinoIndex].name : "", 
+          selectedGroup = groupIndex > -1 ? newItems.groups[groupIndex].name : "", 
+          selectedgamePlayed = slotIndex > -1 ? newItems.slots[slotIndex].name : "";
+          // console.log('responseis: ', newItems.casinos, 'group index: ', casinoIndex, 'printI: ', printI);
+
           tr.find('select[name="name"]').hide().closest('td').append('<span>'+newItems.gnomes[nameIndex].name+'</span>');
           tr.find('input[name="date"]').hide().closest('td').append('<span>'+data.date+'</span>');
           tr.find('select[name="type"]').hide().closest('td').append('<span>'+data.type+'</span>');
-          tr.find('select[name="group"]').hide().closest('td').append('<span>'+newItems.groups[groupIndex].name+'</span>');
+          tr.find('select[name="group"]').hide().closest('td').append('<span>'+selectedGroup+'</span>');
+          tr.find('select[name="casino"]').hide().closest('td').append('<span>'+SelectedCasino+'</span>');
+          tr.find('input[name="rtp"]').hide().closest('td').append('<span>'+data.rtp+'</span>');
+          tr.find('input[name="spin"]').hide().closest('td').append('<span>'+data.spin+'</span>');
+          tr.find('select[name="status"]').hide().closest('td').append('<span>'+data.status+'</span>');
+          tr.find('input[name="balance"]').hide().closest('td').append('<span>'+data.balance+'</span>');
+          tr.find('input[name="bonus"]').hide().closest('td').append('<span>'+data.bonus+'</span>');
+          tr.find('input[name="deposit"]').hide().closest('td').append('<span>'+data.deposit+'</span>');
+          tr.find('select[name="game_played"]').hide().closest('td').append('<span>'+selectedgamePlayed+'</span>');
+          
+          tr.find('select[name="payment_method"]').hide().closest('td').append('<span>'+newItems.payment_methods[data.payment_method]+'</span>');
+          tr.children('td.action').find('a.pEdit').addClass('hover:bg-gray-800').removeClass('hover:bg-green-500').html('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>');
+          // tr.children('td.name').find('a.quickEdit').show();
           
         },
         error: function(response) {

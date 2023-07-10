@@ -11,12 +11,14 @@
             <div class="slotWrap border rounded-md shadow-md">
                 <div class="header flex text-gray-800 bg-gray-200 px-6 py-2">
                     <div class="px-2 py-3 flex-auto w-1/4">{{ __('Name') }}</div>
+                    <div class="px-2 py-3 flex-auto w-1/4">{{ __('Group') }}</div>
                     <div class="px-2 py-3 flex-auto w-1/4">{{__('Action')}}</div>
                 </div>
                 <div class="body">
                     @foreach($casinos as $casino)
                         <div class="singleslot flex px-6 py-2">
                             <div class="px-2 py-3 flex-auto w-1/4">{{ $casino->name }}</div>
+                            <div class="px-2 py-3 flex-auto w-1/4">{{ $casino->group_name }}</div>
                             <div class="px-2 py-3 flex gap-4 flex-auto w-1/4">
                                 <a href="{{route('casinos.edit', $casino)}}" class="px-3 py-3 border rounded hover:text-gray-50 hover:bg-gray-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

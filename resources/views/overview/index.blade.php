@@ -10,7 +10,7 @@
                 <div class="grid gap-10">
                     <div class="">
                         <h2 class="mb-5 font-normal text-2xl">{{__('Statistics')}}</h2>
-                        <form action="{{route('overview.index')}}" method="post">
+                        <form action="{{route('overview.index')}}" method="post" data-token={{csrf_token()}} data-action={{route('overview.ajax_getgnomesbyworkerid')}}>
                             @csrf
                             
                             <div class="grid gap-6 grid-cols-5 items-end mb-8">
@@ -24,7 +24,7 @@
                                 </div>
                                 <div class="">
                                     <label for="worker">{{__('Worker/Staff')}}</label>
-                                    <select name="worker" id="worker" class="border rounded w-full px-2 py-4 shadow">
+                                    <select name="worker" id="worker" class="overviewWorker border rounded w-full px-2 py-4 shadow">
                                         <option value="">{{__('All')}}</option>
                                         @foreach($workers as $worker)
                                             <option {{$forms['worker'] == $worker->id ? 'selected' : ''}} value="{{$worker->id}}">{{$worker->name}}</option>
@@ -33,11 +33,11 @@
                                 </div>
                                 <div class="">
                                     <label for="gnome">{{__('Gnome')}}</label>
-                                    <select name="gnome" id="gnome" class="border rounded w-full px-2 py-4 shadow">
+                                    <select name="gnome" id="gnome" class="border overflowgnome rounded w-full px-2 py-4 shadow">
                                         <option value="">{{__('All')}}</option>
-                                        @foreach($gnomes as $gnome)
+                                        {{-- @foreach($gnomes as $gnome)
                                             <option {{$forms['gnome'] == $gnome->id ? 'selected' : ''}} value="{{$gnome->id}}">{{$gnome->name}}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                 </div>
                                 <div class="">

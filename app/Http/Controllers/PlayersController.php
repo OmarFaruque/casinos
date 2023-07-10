@@ -20,6 +20,8 @@ class PlayersController extends Controller
      */
     public function index($type='')
     {
+        $userWorkerid = Workers::select('id')->where('assigned_user', Auth::user()->id)->first();
+
         $allCasinosDones = Players::select('players.*', 'gnomeinfos.name as name', 'gnomeinfos.id as gnome_id', 'groups.name as group', 'groups.id as group_id', 'casinos.name as casino_name', 'slots.name as slot_name', 'slots.id as slot_id')
         ->leftJoin('gnomeinfos', 'gnomeinfos.id', '=', 'players.name')
         ->leftJoin('groups', 'groups.id', '=', 'players.group')
@@ -29,11 +31,16 @@ class PlayersController extends Controller
 
         if(!empty($type))
             $allCasinosDones->where('players.type', $type);
+        
+        if(auth()->user()->role != 'administrator' && $userWorkerid)
+            $allCasinosDones->where('players.worker', $userWorkerid->id);
 
         $allCasinosDones = $allCasinosDones->get(); 
 
         $gnomes = Gnomeinfo::select('id', 'name')->get();
         $groups = Group::select('id', 'name')->get();
+        $casinos = Casino::select('id', 'name')->get();
+
         
         return view('casinodone.lists')->with([
             'casino_dones' => $allCasinosDones, 
@@ -42,10 +49,40 @@ class PlayersController extends Controller
             'types' => $this->all_types(), 
             'groups' => json_encode(htmlentities($groups)), 
             'payment_methods' => $this->Payment_methods(), 
-            'slots' => $this->all_slots()
+            'slots' => $this->all_slots(), 
+            'casinos' => json_encode(htmlentities($casinos)), 
+            'user_worker_id' => $userWorkerid
         ]);
     }
 
+
+
+    /**
+     * Incoming payment lists
+     */
+    public function incoming_payments(){
+        $userWorkerid = Workers::select('id')->where('assigned_user', Auth::user()->id)->first();
+
+        $allCasinosDones = Players::select('players.*', 'gnomeinfos.name as name', 'gnomeinfos.id as gnome_id', 'groups.name as group', 'groups.id as group_id', 'casinos.name as casino_name', 'slots.name as slot_name', 'slots.id as slot_id')
+        ->leftJoin('gnomeinfos', 'gnomeinfos.id', '=', 'players.name')
+        ->leftJoin('groups', 'groups.id', '=', 'players.group')
+        ->leftJoin('casinos', 'casinos.id', '=', 'players.casino')
+        ->leftJoin('bonuses', 'bonuses.id', '=', 'players.casino_bonus_lookup')
+        ->leftJoin('slots', 'slots.id', '=', 'players.game_played')
+        ->whereDate('players.ipaydate', '>', now());
+
+        if(auth()->user()->role != 'administrator' && $userWorkerid)
+            $allCasinosDones->where('players.worker', $userWorkerid->id);
+
+        $allCasinosDones = $allCasinosDones->get();
+
+
+        return view('casinodone.ipaymentlists')->with([
+            'casino_dones' => $allCasinosDones, 
+            'status_lists' => $this->status_lists(), 
+            'user_worker_id' => $userWorkerid
+        ]);
+    }
 
     /**
      * Casinode done short summary
@@ -177,9 +214,10 @@ class PlayersController extends Controller
         $casinoDone->bonus                  = !empty($request->bonus) ? $request->bonus :0;
         $casinoDone->balance                = !empty($request->balance) ? $request->balance : 0;
         $casinoDone->status                 = $request->status;
-        $casinoDone->game_played            = $request->game_played;
-        $casinoDone->rtp                    = $request->rtp;
+        $casinoDone->game_played            = !empty($request->game_played) ? $request->game_played : '';
+        $casinoDone->rtp                    = !empty($request->rtp) ? $request->rtp : '';
         $casinoDone->worker                 = $userWorkerid->id;
+        $casinoDone->casino                 = !empty($request->casino) ? $request->casino : '';
         $casinoDone->notes                  = !empty($request->notes) ? $request->notes : '';
         $casinoDone->save();
 
@@ -195,7 +233,7 @@ class PlayersController extends Controller
         $casinoDone = new Players;
         $casinoDone->name                   = $request->name;
         $casinoDone->date                   = $request->date;
-        $casinoDone->casino_bonus_lookup    = $request->casino_bonus_lookup;
+        $casinoDone->casino_bonus_lookup    = !empty($request->casino_bonus_lookup) ? $request->casino_bonus_lookup : '';
         $casinoDone->type                   = $request->type;
         $casinoDone->casino                 = $request->casino;
         $casinoDone->group                  = !empty($request->group) ? $request->group : '';
@@ -211,6 +249,9 @@ class PlayersController extends Controller
         $casinoDone->rtp                    = $request->rtp;
         $casinoDone->worker                 = $userWorkerid->id;
         $casinoDone->notes                  = !empty($request->notes) ? $request->notes : '';
+        $casinoDone->ipaynotes               = $request->ipaynotes;
+        $casinoDone->ipayment               = $request->ipayment;
+        $casinoDone->ipaydate               = $request->ipaydate;
 
         $casinoDone->save();
 
@@ -242,6 +283,16 @@ class PlayersController extends Controller
             'done' => Players::find($id),
             'gnomes' => Gnomeinfo::select('id', 'name')->get()
         ]);
+    }
+
+
+
+    /**
+     * Get Group by casino id
+     */
+    public function ajaxgetgroupbycasino(Request $request){
+        $group = Group::select('groups.id', 'groups.name')->leftJoin('casinos', 'casinos.group_id', 'groups.id')->where('casinos.id', $request->casino_id)->get();
+        return response()->json(['msg'=>'success', 'groups' => $group]);   
     }
 
 
@@ -280,7 +331,7 @@ class PlayersController extends Controller
         $casinoDone = Players::find($id);
         $casinoDone->name                   = $request->name;
         $casinoDone->date                   = $request->date;
-        $casinoDone->casino_bonus_lookup    = $request->casino_bonus_lookup;
+        $casinoDone->casino_bonus_lookup    = !empty($request->casino_bonus_lookup) ? $request->casino_bonus_lookup : '';
         $casinoDone->type                   = $request->type;
         $casinoDone->casino                 = $request->casino;
         $casinoDone->group                  = !empty($request->group) ? $request->group : '';
@@ -296,6 +347,10 @@ class PlayersController extends Controller
         $casinoDone->rtp                    = $request->rtp;
         $casinoDone->worker                 = $userWorkerid->id;
         $casinoDone->notes                  = !empty($request->notes) ? $request->notes : '';
+        $casinoDone->ipaynotes               = $request->ipaynotes;
+        $casinoDone->ipayment               = $request->ipayment;
+        $casinoDone->ipaydate               = $request->ipaydate;
+
 
         $casinoDone->save();
 

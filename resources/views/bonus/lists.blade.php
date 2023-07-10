@@ -5,128 +5,130 @@
        <div class="px-5 py-8 w-full overflow-x-hidden">
         <a class="bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('bonus.create')}}">{{ __('New Entry') }}</a>
         
-        <div class="w-full m-auto mt-9 justify-center overflow-x-scroll max-w-full pb-5">
+        <div class="w-full m-auto mt-9 justify-center max-w-full pb-5">
             @if(session('success'))
                 <div class="alert px-6 py-3 bg-blue-400 text-white mb-3 rounded">{{session('success')}}</div>
             @endif
 
  
 
-            <div class="slotWrap border rounded-md shadow-md w-full table min-w-full">
-                <div class="header table-header-group text-gray-800 bg-gray-200 px-6 py-2 w-max">
-                   <div class="table-row">
-                        <div class="px-2 py-3 table-cell align-middle w-40 min-w-fit" style="min-width: 120px;">{{ __('Casino Name') }}</div>
+            <table class="dataTable dataTableBonusLists slotWrap border rounded-md shadow-md w-full table min-w-full">
+                <thead class="header table-header-group text-gray-800 bg-gray-200 px-6 py-2 w-max">
+                   <tr class="table-row">
+                        <th class="px-2 py-3 table-cell align-middle w-40 min-w-fit" style="min-width: 120px;">{{ __('Casino Name') }}</th>
                         {{-- <div class="px-2 py-3 table-cell align-middle w-28">{{ __('Lookup') }}</div> --}}
-                        <div class="px-2 py-3 table-cell align-middle">{{ __('Prtn') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle w-24" style="min-width: 100px;">{{ __('Group') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle">{{ __('Deposit') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle">{{ __('Bonus') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle">{{ __('Profit(%)') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle w-24" style="min-width: 100px;">{{ __('Can Do?') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle">{{ __('Done?') }}</div>
-                        <div class="px-2 py-3 table-cell align-middle w-24 tooltip-bottom-right" data-tooltip="{{__('Wagering Requirements (x? | x | $total | xB?)')}}">
-                            {{ __('Wagering') }}
-                        </div>
-                        <div class="px-2 py-3 table-cell align-middle" style="min-width: 150px;">{{ __('Pay. Methods') }}</div>
-                        <div class="tooltip-bottom px-2 py-3 table-cell align-middle" data-tooltip="{{__('If not banned (Country | Casino | Group)')}}">
-                            {{ __('Ok to Play?') }}
-                        </div>
-                        <div class="px-2 py-3 table-cell align-middle w-24 tooltip-bottom" data-tooltip="{{__('Last Time Gnome Done Casino Group (Criteria | Last Done | Ok?)')}}">
-                            {{ __('Done Group') }}
-                        </div>
+                        {{-- <th class="px-2 py-3 table-cell align-middle">{{ __('Prtn') }}</th> --}}
+                        <th class="px-2 py-3 table-cell align-middle w-24" style="min-width: 100px;">{{ __('Group') }}</th>
+                        <th class="px-2 py-3 table-cell align-middle">{{ __('Deposit') }}</th>
+                        <th class="px-2 py-3 table-cell align-middle">{{ __('Bonus') }}</th>
+                        <th class="px-2 py-3 table-cell align-middle">{{ __('Profit(%)') }}</th>
+                        <th class="px-2 py-3 table-cell align-middle w-24" style="min-width: 100px;">{{ __('Can Do?') }}</th>
+                        <th class="px-2 py-3 table-cell align-middle">{{ __('Done?') }}</th>
+                        <th class="px-2 py-3 table-cell align-middle w-24 tooltip-bottom-right">
+                            {{ __('Wagering') }}<br/>
+                            <small class="font-thin">{{__('(x? | x | $total | xB?)')}}</small>
+                        </th>
+                        <th class="px-2 py-3 table-cell align-middle" style="min-width: 150px;">{{ __('Pay. Methods') }}</th>
+                        <th class="tooltip-bottom px-2 py-3 table-cell align-middle">
+                            {{ __('Ok to Play?') }}<br/><small class="font-thin block text-[10px] leading-[12px]">{{__('If not banned (Country | Casino | Group)')}}</small>
+                        </th>
+                        <th class="px-2 py-3 table-cell align-middle w-24 tooltip-bottom">
+                            {{ __('Done Group') }}<br/><small class="font-thin text-[10px] leading-[12px] block">{{__('Last Time Gnome Group (Criteria | Last Done | Ok?)')}}</small>
+                        </th>
 
-                        <div class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-36" data-tooltip="{{__('Last Time Anyone Done Casino (Criteria | Last Done | Ok?)')}}">
-                            {{ __('Any. Casino') }}
-                        </div>
-                        <div class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-32" data-tooltip="{{__('Last Time Anyone Done Group (Criteria | Last Done | Ok?)')}}">
-                            {{ __('Any. Group') }}
-                        </div>
-                        <div class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom" data-tooltip="{{__('Pending Payouts for Gnome in this Group (Criteria | Owed | Ok?)')}}">
-                            {{ __('Pen. Payout') }}
-                        </div>
-                        <div class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-40" data-tooltip="{{__('Total Pending Payouts for Everyone for this Group (Criteria | Owed | Ok?)')}}">
-                            {{ __('Every. Payout') }}
-                        </div>
-                        <div class="px-2 py-3 flex-auto table-cell align-middle tooltip-bottom-right" data-tooltip="{{__('SUB Pending Payouts for Everyone in this Group (Criteria | Owed | Ok?)')}}">
-                            {{ __('Sub Payout') }}
-                        </div>
-                        <div class="px-2 py-3 flex-auto">{{__('Action')}}</div>
-                   </div>
-                </div>
-                <div class="body table-row-group">
+                        <th class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-36">
+                            {{ __('Any. Casino') }}<br/>
+                            <small class="font-thin text-[10px] block">{{__('Last Time Anyone Done Casino (Criteria | Last Done | Ok?)')}}</small>
+                        </th>
+                        <th class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-32">
+                            {{ __('Any. Group') }}<br/><small class="font-thin text-[10px] leading-[12px] block">{{__('Last Time Anyone Done Group (Criteria | Last Done | Ok?)')}}</small>
+                        </th>
+                        <th class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom">
+                            {{ __('Pen. Payout') }} <small class="font-thin text-[10px] leading-[12px] block">{{__('Pending Payouts for Gnome in this Group (Criteria | Owed | Ok?)')}}</small>
+                        </th>
+                        <th class="px-2 py-3 table-cell align-middle flex-auto tooltip-bottom w-40">
+                            {{ __('Every. Payout') }} <small class="font-thin text-[10px] leading-[12px] block">{{__('Total Pending Payouts for Everyone for this Group (Criteria | Owed | Ok?)')}}</small>
+                        </th>
+                        <th class="px-2 py-3 flex-auto table-cell align-middle tooltip-bottom-right">
+                            {{ __('Sub Payout') }} <small class="font-thin text-[10px] leading-[12px] block">{{__('SUB Pending Payouts for Everyone in this Group (Criteria | Owed | Ok?)')}}</small>
+                        </th>
+                        <th class="px-2 py-3 flex-auto">{{__('Action')}}</th>
+                    </tr>
+                </thead>
+                <tbody class="body table-row-group">
                     @foreach($bonuss as $bonus)
-                        <div class="singleslot table-row px-6 py-2">
-                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->casino_name }}</div>
+                        <tr class="singleslot table-row px-6 py-2">
+                            <td class="px-2 py-3 table-cell align-middle ">{{ $bonus->casino_name }}</td>
                             {{-- <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->casino_lookup }}</div> --}}
-                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->prtn }}</div>
-                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->group_name }}</div>
-                            <div class="px-2 py-3 table-cell align-middle ">€&nbsp;{{ $bonus->deposit ? $bonus->deposit : 0 }}</div>
-                            <div class="px-2 py-3 table-cell align-middle ">€&nbsp;{{ $bonus->bonus ? $bonus->bonus : 0 }}</div>
-                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->profit }}</div>
-                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->cando }}</div>
-                            <div class="px-2 py-3 table-cell align-middle ">{{ $bonus->done }}</div>
+                            {{-- <td class="px-2 py-3 table-cell align-middle ">{{ $bonus->prtn }}</td> --}}
+                            <td class="px-2 py-3 table-cell align-middle ">{{ $bonus->group_name }}</td>
+                            <td class="px-2 py-3 table-cell align-middle ">€&nbsp;{{ $bonus->deposit ? $bonus->deposit : 0 }}</td>
+                            <td class="px-2 py-3 table-cell align-middle ">€&nbsp;{{ $bonus->bonus ? $bonus->bonus : 0 }}</td>
+                            <td class="px-2 py-3 table-cell align-middle ">{{ $bonus->profit }}</td>
+                            <td class="px-2 py-3 table-cell align-middle ">{{ $bonus->cando }}</td>
+                            <td class="px-2 py-3 table-cell align-middle ">{{ $bonus->done }}</td>
 
-                            <div class="px-2 py-3 flex-auto table-cell align-middle ">
+                            <td class="px-2 py-3 flex-auto table-cell align-middle ">
                                 <div class="flex w-100">
-                                    <div class="border p-1 px-2">{{$bonus->wagering_name}}</div>
-                                    <div class="border p-1 px-2">{{$bonus->wagering_value}}</div>
-                                    <div class="border p-1">{{$bonus->wagering_total}}</div>
-                                    <div class="border p-1">{{number_format($bonus->wagering_total/$bonus->bonus, 2)}}</div>
+                                    <div class="border p-1 px-2 min-w-[40px]">{{$bonus->wagering_name}}</div>
+                                    <div class="border p-1 px-2 min-w-[40px] align-middle text-center">{{$bonus->wagering_value}}</div>
+                                    <div class="border p-1 min-w-[40px] align-middle text-center">{{$bonus->wagering_total}}</div>
+                                    <div class="border p-1 min-w-[40px] text-center">{{number_format($bonus->wagering_total/$bonus->bonus, 2)}}</div>
                                 </div>
-                            </div>
+                            </td>
 
 
-                            <div class="px-2 py-3 flex-auto table-cell align-middle ">{{ implode(' | ', $bonus->payment_methods) }}</div>
-                            <div class="px-2 py-3 flex-auto table-cell align-middle ">
+                            <td class="px-2 py-3 flex-auto table-cell align-middle ">{{ implode(' | ', $bonus->payment_methods) }}</td>
+                            <td class="px-2 py-3 flex-auto table-cell align-middle ">
                                 <div class="flex w-100">
                                     <div class="border p-1 px-2">{{$bonus->ok_to_play_country}}</div>
                                     <div class="border p-1 px-2">{{ $bonus->ok_to_play_casino }}</div>
                                     <div class="border p-1">{{$bonus->ok_to_play_group}}</div>
                                 </div>
-                            </div>
-                            <div class="px-2 py-3 flex-auto table-cell align-middle ">
+                            </td>
+                            <td class="px-2 py-3 flex-auto table-cell align-middle ">
                                 <div class="flex w-100">
                                     <div class="border p-1 px-2">{{ $bonus->gnome_done_casino ? $bonus->gnome_done_casino : 0}}</div>
                                     <div class="border p-1 px-2">{{ $bonus->last_gnome_done_casino }}</div>
                                     <div class="border p-1">{{ $bonus->gnome_done_casino_ok }}</div>
                                 </div>
-                            </div>
-                            <div class="px-2 py-3 flex-auto table-cell align-middle">
+                            </td>
+                            <td class="px-2 py-3 flex-auto table-cell align-middle">
                                 <div class="flex w-100">
                                     <div class="border p-1 px-2">{{ $bonus->anyone_done_casino ? $bonus->anyone_done_casino : 0}}</div>
                                     <div class="border p-1 px-2">{{ $bonus->last_anyone_done_casino }}</div>
                                     <div class="border p-1">{{ $bonus->anyone_done_casino_ok }}</div>
                                 </div>
-                            </div>
-                            <div class="px-2 py-3 flex-auto table-cell align-middle">
+                            </td>
+                            <td class="px-2 py-3 flex-auto table-cell align-middle">
                                 <div class="flex w-100">
                                     <div class="border p-1 px-2">{{ $bonus->anyone_done_group ? $bonus->anyone_done_group : 0}}</div>
                                     <div class="border p-1 px-2">{{ $bonus->last_anyone_done_group }}</div>
                                     <div class="border p-1">{{ $bonus->anyone_done_group_ok }}</div>
                                 </div>
-                            </div>
-                            <div class="px-2 py-3 flex-auto table-cell align-middle">
+                            </td>
+                            <td class="px-2 py-3 flex-auto table-cell align-middle">
                                 <div class="flex w-100">
-                                    <div class="border p-1 px-2">{{ $bonus->gnome_pending_payout ? $bonus->gnome_pending_payout : 0}}</div>
-                                    <div class="border p-1 px-2">{{ $bonus->pp_gnome_group }}</div>
-                                    <div class="border p-1">{{ $bonus->pp_gnome_group_ok }}</div>
+                                    <div class="border p-1 px-2 min-w-[30px]">{{ $bonus->gnome_pending_payout ? $bonus->gnome_pending_payout : 0}}</div>
+                                    <div class="border p-1 px-2 min-w-[30px]">{{ $bonus->pp_gnome_group }}</div>
+                                    <div class="border p-1 min-w-[30px]">{{ $bonus->pp_gnome_group_ok }}</div>
                                 </div>
-                            </div>
-                            <div class="px-2 py-3 flex-auto table-cell align-middle">
+                            </td>
+                            <td class="px-2 py-3 flex-auto table-cell align-middle">
                                 <div class="flex w-100">
-                                    <div class="border p-1 px-2">{{ $bonus->everyone_pending_payout ? $bonus->everyone_pending_payout : 0}}</div>
-                                    <div class="border p-1 px-2">{{ $bonus->tpp_gnome_everyone_in_group }}</div>
-                                    <div class="border p-1">{{ $bonus->tpp_gnome_everyone_in_group_ok }}</div>
+                                    <div class="border p-1 px-2 min-w-[30px]">{{ $bonus->everyone_pending_payout ? $bonus->everyone_pending_payout : 0}}</div>
+                                    <div class="border p-1 px-2 min-w-[30px]">{{ $bonus->tpp_gnome_everyone_in_group }}</div>
+                                    <div class="border p-1 min-w-[30px]">{{ $bonus->tpp_gnome_everyone_in_group_ok }}</div>
                                 </div>
-                            </div>
-                            <div class="px-2 py-3 flex-auto table-cell items-center justify-center align-middle">
+                            </td>
+                            <td class="px-2 py-3 flex-auto table-cell items-center justify-center align-middle">
                                 <div class="flex w-100">
-                                    <div class="border p-1 px-2">{{ $bonus->everyone_sub_pending_payout ? $bonus->everyone_sub_pending_payout : 0}}</div>
-                                    <div class="border p-1 px-2">{{ $bonus->spp_gnome_everyone_in_group }}</div>
-                                    <div class="border p-1">{{ $bonus->spp_gnome_everyone_in_group_ok }}</div>
+                                    <div class="border p-1 px-2 min-w-[30px]">{{ $bonus->everyone_sub_pending_payout ? $bonus->everyone_sub_pending_payout : 0}}</div>
+                                    <div class="border p-1 px-2 min-w-[30px]">{{ $bonus->spp_gnome_everyone_in_group }}</div>
+                                    <div class="border p-1 min-w-[30px]">{{ $bonus->spp_gnome_everyone_in_group_ok }}</div>
                                 </div>
-                            </div>
-                            <div class="px-2 py-3 gap-4 flex-auto items-center justify-center flex">
+                            </td>
+                            <td class="px-2 py-3 gap-4 flex-auto items-center justify-center flex">
                                 {{-- <div class="flex items-center h-full"> --}}
                                     <a href="{{route('bonus.edit', $bonus)}}" class="px-2 py-2 border rounded hover:text-gray-50 hover:bg-gray-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -144,11 +146,11 @@
                                         </button>
                                     </form>
                                 {{-- </div> --}}
-                            </div>
-                        </div>
+                            </td>
+                        </tr>
                     @endforeach
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
        </div>
     </div>

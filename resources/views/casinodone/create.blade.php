@@ -3,7 +3,13 @@
 @section('content')
     <div class="listsconetnt content-center justify-center w-full">
         <div class="grid h-full content-center justify-center">
-            <h2 class="text-center bold mb-5">{{__('New Entry')}}</h2>
+            <h2 class="text-center bold mb-5 text-2xl mt-8">
+                @if(Route::is('new-casino-done'))
+                    {{__('New Entry')}}
+                @else
+                    {{__('Update Entry')}}
+                @endif
+            </h2>
             <div class="grid w-full m-auto content-item-center h-full justify-center">
                 <form
                     @if(Route::is('new-casino-done'))
@@ -38,7 +44,7 @@
                             <label for="date">{{__('Date')}}</label>
                             <input type="date" name="date" class="border rounded p-2 mr-2 w-full shadow {{ $errors->get('date') ? 'border-orange-600' : '' }}" id="date" value="{{ isset($done) ? $done->date : '' }}">
                         </div>
-                        <div class="">
+                        {{-- <div class="">
                             <label for="casino_bonus_lookup">{{__('Casino Bonus Lookup')}}</label>
                             <select name="casino_bonus_lookup" id="casino_bonus_lookup" class="h-11 border rounded p-2 mr-2 shadow w-full {{ $errors->get('casino_bonus_lookup') ? 'border-orange-600' : '' }}">
                                 <option value="">{{__('Lookup...')}}</option>
@@ -52,7 +58,7 @@
                                 </svg>
                                 <small>{{__('Add New')}}</small>
                             </a>
-                        </div>
+                        </div> --}}
                         <div class="">
                             <label for="type">{{__('Type')}}</label>
                             <select name="type" id="type" class="border rounded p-2 mr-2 h-11 shadow w-full {{ $errors->get('type') ? 'border-orange-600' : '' }}">
@@ -150,7 +156,21 @@
                             </select>
                         </div> --}}
 
-                        <div class="col-span-2">
+                        <div class="">
+                            <label for="ipayment">{{__('Incoming Payment')}}</label>
+                            <input type="number" name="ipayment" class="border rounded p-2 mr-2 shadow w-full" id="ipayment" min="0" step="1"  value="{{ isset($done) ? $done->ipayment : '' }}">
+                        </div>
+                        <div class="">
+                            <label for="ipaydate">{{__('Incoming Payment Date')}}</label>
+                            <input type="date" name="ipaydate" class="border rounded p-2 mr-2 shadow w-full" id="ipaydate"  value="{{ isset($done) ? $done->ipaydate : '' }}">
+                        </div>
+
+                        <div class="">
+                            <label for="ipaynotes">{{__('Incoming Payment Notes')}}</label>
+                            <input type="text" name="ipaynotes" class="border rounded p-2 mr-2 w-full shadow" id="ipaynotes" value="{{ isset($done) ? $done->ipaynotes : '' }}">
+                        </div>
+
+                        <div class="col-span-3">
                             <label for="notes">{{__('Notes')}}</label>
                             <input type="text" name="notes" class="border rounded p-2 mr-2 shadow w-full" id="notes" value="{{ isset($done) ? $done->notes : '' }}">
                         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use App\Models\Casino;
 use Illuminate\Http\Request;
 use App\Http\Requests\CasinoRequest;
@@ -13,8 +14,20 @@ class CasinoController extends Controller
      */
     public function index()
     {
+        $casinos = Casino::all()->map(function( $v ){
+            $v->group_name = '';
+            $groupname = Group::select('name')->where('id', $v->group_id)->first();
+            if($groupname)
+                $v->group_name = $groupname->name;
+            
+            return $v;
+
+        });
+
+        
+        // dd($casinos);
         return view('casino.lists')->with([
-            'casinos' => Casino::all()
+            'casinos' => $casinos
         ]);
     }
 
@@ -23,7 +36,9 @@ class CasinoController extends Controller
      */
     public function create()
     {
-        return view('casino.create');
+        return view('casino.create')->with([
+            'groups' => Group::select('id', 'name')->get()
+        ]);
     }
 
     /**
@@ -33,6 +48,7 @@ class CasinoController extends Controller
     {
         $casino = new Casino;
         $casino->name = $request->name; 
+        $casino->group_id = $request->group_id; 
         $casino->save(); 
         
         return redirect('casinos')->with('message', 'Casino create successfully.');
@@ -52,7 +68,8 @@ class CasinoController extends Controller
     public function edit(Casino $casino)
     {
         return view('casino.create')->with([
-            'casino' => $casino
+            'casino' => $casino,
+            'groups' => Group::select('id', 'name')->get()
         ]);
     }
 
@@ -62,6 +79,7 @@ class CasinoController extends Controller
     public function update(CasinoRequest $request, Casino $casino)
     {
         $casino->name = $request->name; 
+        $casino->group_id = $request->group_id; 
         $casino->save();
 
         return redirect('casinos')->with('success','Updated successfully');   

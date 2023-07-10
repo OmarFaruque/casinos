@@ -31,7 +31,7 @@
                             <select name="assigned_user" id="assigned_user" class="border rounded px-2 py-2.5 mr-2 w-full shadow">
                                 <option value="">{{__('User...')}}</option>
                                 @foreach($users as $user)
-                                    <option {{ isset($worker) && $user->id == $worker->assigned_user ? 'selected' : '' }} value="{{$user->id}}">{{!empty($user->display_name) ? $user->display_name : $user->name }}</option>
+                                    <option {{ isset($worker) && $user->id == $worker->assigned_user ? 'selected' : '' }} value="{{$user->id}}">{{!empty($user->display_name) ? $user->display_name : $user->name }} - {{$user->email}}</option>
                                 @endforeach
                             </select>
                         </div>

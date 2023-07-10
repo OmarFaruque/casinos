@@ -8,23 +8,22 @@
             @if(session('success'))
                 <div class="alert px-6 py-3 bg-blue-400 text-white mb-3 rounded">{{session('success')}}</div>
             @endif
-            <table class="dataTable dataTableCasinoDone slotWrap border shadow-md table w-full"  data-token={{csrf_token()}} data-action_casinogroup={{route('players.casinogroup')}}  data-action={{route('players.ajaxstore')}} data-gnomes={!! $gnomes !!} data-types={!! json_encode($types) !!} data-groups={!! $groups !!} data-casinos={!! $casinos !!} data-payment_methods={!! json_encode($payment_methods) !!} data-statuslists="{!! htmlspecialchars(json_encode($status_lists)) !!}" data-slots={!! $slots !!}>
+            <table class="dataTableIncomentPayment slotWrap border shadow-md table w-full" >
                 <thead class="table-header-group w-max">
                     <tr class=" table-row text-gray-800 bg-gray-200 px-6 py-2">
                         <th class="px-2 py-3 table-cell ">{{ __('Name') }}</th>
                         <th class="px-2 py-3 table-cell ">{{ __('Date') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Incoming Payment') }}</th>
+                        <th class="px-2 py-3 table-cell ">{{ __('Incoming Date') }}</th>
                         {{-- <th class="px-2 py-3 table-cell ">{{ __('Casino Lookup') }}</th> --}}
                         <th class="px-2 py-3 table-cell ">{{ __('Type') }}</th>
                         <th class="px-2 py-3 table-cell ">{{ __('Casino') }}</th>
                         <th class="px-2 py-3 table-cell ">{{ __('Group') }}</th>
-                        <th class="px-2 py-3 table-cell ">{{ __('Payment Method') }}</th>
                         <th class="px-2 py-3 table-cell ">{{ __('Deposit') }}</th>
                         <th class="px-2 py-3 table-cell ">{{ __('Bonus') }}</th>
                         <th class="px-2 py-3 table-cell ">{{ __('Balance') }}</th>
                         <th class="px-2 py-3 table-cell ">{{ __('Status') }}</th>
                         <th class="px-2 py-3 table-cell ">{{ __('Game Played') }}</th>
-                        <th class="px-2 py-3 table-cell ">{{ __('RTP') }}</th>
-                        <th class="px-2 py-3 table-cell ">{{ __('Bet') }}</th>
                         <th class="px-2 py-3 table-cell ">{{__('Action')}}</th>
                     </tr>
                 </thead>
@@ -33,10 +32,15 @@
                         <tr class="singleslot table-row px-6 py-2" data-done="{!! htmlspecialchars(json_encode($done)) !!}">
                             <td class="px-2 py-3 table-cell relative name">
                                 <span>{{ $done->name }}</span>
-                                <a class="absolute hidden quickEdit left-2 bottom-0 text-sm text-blue-500" href="#">{{__('Quick Edit')}}</a>
                             </td>
                             <td class="px-2 py-3  table-cell date">
                                 <span>{{ $done->date }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell date">
+                                <span>{{ $done->ipayment }}</span>
+                            </td>
+                            <td class="px-2 py-3  table-cell date">
+                                <span>{{ $done->ipaydate }}</span>
                             </td>
                             {{-- <td class="px-2 py-3  table-cell">{{ $done->bonus_lookup_casino_name }}</td> --}}
                             <td class="px-2 py-3  table-cell type">
@@ -47,9 +51,6 @@
                             </td>
                             <td class="px-2 py-3  table-cell group">
                                 <span>{{ $done->group }}</span>
-                            </td>
-                            <td class="px-2 py-3  table-cell uppercase payment_method">
-                                <span>{{ $done->payment_method }}</span>
                             </td>
                             <td class="px-2 py-3  table-cell deposit">
                                 <span>{{ $done->deposit }}</span>
@@ -66,12 +67,7 @@
                             <td class="px-2 py-3  table-cell slot_name">
                                 <span>{{ $done->slot_name }}</span>
                             </td>
-                            <td class="px-2 py-3  table-cell rtp">
-                                <span>{{ !empty($done->rtp) ? number_format($done->rtp, 2) . '%' : '' }}</span>
-                            </td>
-                            <td class="px-2 py-3  table-cell spin">
-                                <span>{{ !empty($done->spin) ? $done->spin : '' }}</span>
-                            </td>
+                            
                             <td class="px-2 py-3 table-cell gap-1 action">
                                 <div class="flex gap-2">
                                     <a data-url={{route('players.ajaxupdate', $done->id)}} href="{{route('players.edit', $done)}}" class="px-3 py-3 border pEdit rounded hover:text-gray-50 hover:bg-gray-800">
@@ -96,13 +92,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="addNew justify-end flex w-full mt-5">
-                <button type="button" id="addNewCasinoDone" >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-circle-fill hover:text-gray-900 text-gray-600" viewBox="0 0 16 16">
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                    </svg>
-                </button>
-        </div>
+        
         @else
             <div class="alert px-6 py-3 bg-red-400 text-white mb-3 rounded">{{__('You have no permission to take any action on this page. Please contact to the site administrator to assign you as a worker.')}}</div>
         @endif

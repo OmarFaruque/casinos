@@ -22,7 +22,6 @@ class BonusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'casino_lookup' => 'required', 
             'casino_name' => 'required',
             'gnome' => 'required'
         ];

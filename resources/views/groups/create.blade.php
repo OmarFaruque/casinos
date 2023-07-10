@@ -1,9 +1,9 @@
 @extends('layouts.app-master')
 
 @section('content')
-    <div class="listsconetnt content-center justify-center w-full">
+    <div class="listsconetnt content-center justify-center w-full mt-24">
         <div class="grid h-full content-center justify-center">
-            <h2 class="text-center bold mb-5 text-2xl"><strong>{{__('New Group')}}</strong></h2>
+            <h2 class="text-center bold mb-5 text-2xl"><strong>{{Route::is('groups.create') ? __('New Group') : __('Update Group')}}</strong></h2>
             <div class="grid w-full m-auto content-item-center h-full justify-center">
                 <form 
                     @if(Route::is('groups.create'))
