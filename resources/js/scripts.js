@@ -206,17 +206,17 @@ if($('#addNewCasinoDone').length){
                         newItemHTML +='<option value="'+v+'">'+newItems.types[v]+'</option>'
                       };
                       +'</select></td>';
-                      newItemHTML+= '<td> <select name="casino" id="casino" class="border rounded p-2 h-11 mr-2 shadow w-full">'
-                      +'<option value="">Select casino...</option>';
+                      newItemHTML+= '<td> <select name="casino" id="casino" class="listcasino border rounded p-2 h-11 mr-2 shadow w-full">'
+                      +'<option value="">Select Casino...</option>';
                       for(var i = 0; i < newItems.casinos.length; i++){
                         newItemHTML +='<option value="'+newItems.casinos[i].id+'">'+newItems.casinos[i].name+'</option>'
                       }
                       +'</select></td>';
                       newItemHTML+= '<td> <select name="group" id="group" class="border rounded p-2 h-11 mr-2 shadow w-full">'
                       +'<option value="">Select a group...</option>';
-                      for(var i = 0; i < newItems.groups.length; i++){
-                        newItemHTML +='<option value="'+newItems.groups[i].id+'">'+newItems.groups[i].name+'</option>'
-                      }
+                      // for(var i = 0; i < newItems.groups.length; i++){
+                      //   newItemHTML +='<option value="'+newItems.groups[i].id+'">'+newItems.groups[i].name+'</option>'
+                      // }
                       +'</select></td>';
                       newItemHTML+='<td><select class="border rounded p-2 mr-2 shadow w-full h-11" name="payment_method" id="payment_method">'
                       +'<option value="">Payment Method...</option>'; 
@@ -266,7 +266,6 @@ if($('#addNewCasinoDone').length){
     let done = tr.data('done');
 
 
-
     // Name 
     var nameHtml = '<select name="name" id="name" class="h-11 border rounded p-2 mr-2 shadow w-full">'
     +'<option value="">Name...</option>'; 
@@ -296,11 +295,11 @@ if($('#addNewCasinoDone').length){
 
     //Group
     var groupHtml = '<select name="group" id="group" class="border rounded p-2 h-11 mr-2 shadow w-full">'
-                      +'<option value="">Select casino first</option>';
-                      // for(var i = 0; i < newItems.groups.length; i++){
-                      //   let selectedGroup = newItems.groups[i].id == done.group_id ? 'selected' : '';
-                      //   groupHtml +='<option '+selectedGroup+' value="'+newItems.groups[i].id+'">'+newItems.groups[i].name+'</option>'
-                      // }
+                      +'<option value="">Select Group...</option>';
+                      if(done.group_id){
+                        
+                        groupHtml +='<option selected value="'+done.group_id+'">'+done.group+'</option>'
+                      }
                       +'</select>';
 
     // Payment methods
@@ -321,6 +320,7 @@ if($('#addNewCasinoDone').length){
                       +'</select>';
 
     // Game Played
+    console.log('newItems: ', newItems);
     let gameHTML = '<select name="game_played" id="game_played" class="h-11 border rounded p-2 mr-2 shadow w-full">'
                   +'<option value="">Select a slot</option>'
                   for(var i = 0; i < newItems.slots.length; i++){
@@ -388,12 +388,14 @@ if($('#addNewCasinoDone').length){
 
   // Append group while casino change from dropdown
   $(document.body).on('change', 'select[name="casino"].listcasino', function(){
+
     let groupOptions = '',
     tr = $(this).closest('tr'),
     done = tr.data('done'), 
     casino_id = $(this).val();
 
-    
+    // remove existing dropdown from groups lists
+    tr.find('select[name="group"]').html('<option value="">Select Group...</option>');
 
 
     let data = {
@@ -408,7 +410,7 @@ if($('#addNewCasinoDone').length){
         success:function(response)
         {
           for(var i = 0; i < response.groups.length; i++){
-            let selectedGroup = response.groups[i].id == done.group_id ? 'selected' : '';
+            let selectedGroup = typeof done != 'undefined' && response.groups[i].id == done.group_id ? 'selected' : '';
             groupOptions +='<option '+selectedGroup+' value="'+response.groups[i].id+'">'+response.groups[i].name+'</option>'
           }
           tr.find('select[name="group"]').append(groupOptions);

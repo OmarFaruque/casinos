@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="listsconetnt w-full px-5 py-8">
-        <a class="bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('new-casino-done')}}">{{ __('New Entry') }}</a>
+        <a class="bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('slot.create')}}">{{ __('New Entry') }}</a>
         <div class="w-2/4 m-auto mt-9 justify-center">
             @if(session('success'))
                 <div class="alert px-6 py-3 bg-blue-400 text-white mb-3 rounded">{{session('success')}}</div>

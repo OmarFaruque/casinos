@@ -2,7 +2,9 @@
 
 @section('content')
     <div class="listsconetnt w-full px-5 py-8">
-        <a class="bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('casinos.create')}}">{{ __('New Entry') }}</a>
+        <a class="mt-15 ml-30 inline-block bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900" href="{{route('casinos.create')}}">{{ __('New Entry') }}</a>
+        <a href="{{route('groups.index')}}" class="mt-15 ml-30 inline-block bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900">{{__('Group Lists')}}</a>
+        <a href="{{route('groups.create') }}" class="mt-15 ml-30 inline-block bg-gray-200 py-3 px-5 rounded text-gray-900 hover:text-gray-200 hover:bg-gray-900">{{ __('Add New Group') }}</a>
         
         <div class="w-2/4 m-auto mt-9 justify-center">
             @if(session('success'))

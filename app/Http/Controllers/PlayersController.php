@@ -49,7 +49,7 @@ class PlayersController extends Controller
             'types' => $this->all_types(), 
             'groups' => json_encode(htmlentities($groups)), 
             'payment_methods' => $this->Payment_methods(), 
-            'slots' => $this->all_slots(), 
+            'slots' => json_encode(htmlentities($this->all_slots())), 
             'casinos' => json_encode(htmlentities($casinos)), 
             'user_worker_id' => $userWorkerid
         ]);
